@@ -1,0 +1,51 @@
+Стэк типа LIFO (Last-In-First-Out)
+
+Алгоритм в котором каждый элемент добавляется конец и удаляется тоже последний элемент.
+Такой стэк используется для сохранения последовательности вызова функции.
+
+Реализация 
+-------------------------------------------------------
+# Эта программа проверяет закрыта ли каждая скобка в строке
+# Здесь используются стэки
+string = input('Enter string with brackets to check:')
+# string = "( { [ } )"
+
+
+def lifo_stack(string: str):
+    status = False
+    stack = []
+    for i in string:
+
+        if i in "({[":
+            stack.append(i)
+            continue
+
+        elif i in ")}]":
+            if len(stack) == 0:
+                return False
+
+            without_end = stack.copy().pop()
+
+            if without_end == '(' and i == ')':
+                stack.pop()
+                continue
+
+            if without_end == '[' and i == ']':
+                stack.pop()
+                continue
+
+            if without_end == '{' and i == '}':
+                stack.pop()
+                continue
+
+            status = False
+
+    if not stack:
+        status = True
+
+    return status
+
+
+print(lifo_stack(string))
+-------------------------------------------------------
+

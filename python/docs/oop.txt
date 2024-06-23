@@ -1,0 +1,2248 @@
+ООП Python
+
+Объектно-ориентированное программирование (ООП) - это пародигма программирования, которая подразумевает то, что
+все в программе объекты и каждый объект имеет данные (атрибуты или свойста, это одно и тоже) 
+и методы (фукнции, которые можно проводить с объектом)
+ 
+Пародигма это способ структурирования (создание структуры) и концептуализации (какая-то общая концепция) 
+реализации компьютерной программы.
+
+Концепция ООП
+
+    Инкапсуляция
+    Наследование
+    Полиморфизм
+
+
+Инкапсуляция - это концепция, которая дает возможность сделать так, чтоб вмешаться в определенные свойства и методы
+класса было невозможно вне класса, скрыть для всего, что вне класса.
+
+Наследование - это концепция, в которой говорится, что есть определенные родительские классы которые могут содержать
+в себе общие свойства и методы для всех дочерних классов
+
+Полиморфизм - это возможность работы с совершенно разными объектами единым образом (через единый интерфейс).
+(есть двух типов ad-hoc и параметрезерованный, в Python используется параметрезерованный полиморфизм)
+
+
+
+Классы и атрибуты
+
+
+Класс - это шаблон по которому можно создавать объекты.
+Классы могут содержать атрибуты(свойства) и методы(функции).
+
+Создание классов
+
+class Student:
+    pass
+
+Создание объекта Student или же экземпляра класса Student
+
+Pavlo = Student()
+
+Добавление атрибутов класса
+
+class Student:
+    age = 7
+    things = ['notebook', 'bag', 'pencil']
+
+Эти атрибуты наследуют объекты этого класса.
+
+print(dir(Pavlo))
+
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', 
+'__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', 
+'__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', 
+'__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 
+'__weakref__', 'age', 'things']
+
+print(Pavlo.age) # 7
+
+Но можно создавать локальные атрибуты, для конкретных объектов
+
+Pavlo.age = 13
+Pavlo.things = ['book', 'pencil']
+
+И при этом меняется значение только атрибута объекта, на класс это не влияет
+С помощью __dict__ можно вывести словарь атрибутов и их значений конкретного объекта
+
+print(Pavlo.__dict__) # {'age': 13, 'things': ['book', 'pencil']}
+
+Это можно применять и к классам потому, что они тоже объекты
+
+{'__module__': '__main__', 'age': 7, 'things': ['notebook', 'bag', 'pencil'],
+'__dict__': <attribute '__dict__' of 'Student' objects>,
+'__weakref__': <attribute '__weakref__' of 'Student' objects>, '__doc__': None}
+
+Атрибуты можно добавлять и с помощью встроенной фукнции setattr()
+
+        Класс    Название      Значение 
+setattr(Student, 'name', 'SimpleStudentName')
+
+Атрибуты можно получить с помощью встроенной фукнции getattr()
+
+        Класс    Название    Что вывести, если такого атрибута нет
+getattr(Student, 'notebook', False)
+
+Удаление атрибутов
+
+del Student.homework
+
+delattr(Student, 'homework') # с помощью встроенной функции
+
+С помощью hasattr можно проверить есть ли атрибут у класса
+
+print(hasattr(Student, 'things')) # True
+
+Также в классы можно добавлять описание, которое будет записываться в __doc__
+
+class Student:
+    "Typical student"
+    pass
+
+
+print(Student.__doc__)  # Typical student
+
+
+
+Методы классов
+
+
+Метод - это функция, которая действует на объекты данного класса.
+Метод это по факту атрибут который связан с функцией который используется только для объектов определенного класса
+
+Создание метода класса
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+
+    def go_to_school():                         # это метод класса Student
+        print("You call method go_to_school")
+
+
+Если метод это тоже своего рода атрибут, можно попробовать вывести его значение
+
+print(Student.go_to_school) # <function Student.go_to_school at 0x1005ace00>
+
+Мы получили значение этого атрибута, и его значение это функция.
+Таким образом мы убидились что метод это атрибут значение которого функция.
+
+Соответственно если метод - это атрибут, значение которого функция, его можно вызвать как и любую функцию
+
+Student.go_to_school() # You call method go_to_school
+
+Теперь создадим экземпляр класса, у которого есть метод
+
+Pavlo = Student()
+
+И проверим атрибуты созданного объекта
+
+print(Pavlo.__dir__())
+
+['__module__', 'age', 'things', 'go_to_school', '__dict__', '__weakref__', '__doc__', '__new__', '__repr__', 
+'__hash__', '__str__', '__getattribute__', '__setattr__', '__delattr__', '__lt__', '__le__', '__eq__', '__ne__', 
+'__gt__', '__ge__', '__init__', '__reduce_ex__', '__reduce__', '__getstate__', '__subclasshook__', '__init_subclass__',
+'__format__', '__sizeof__', '__dir__', '__class__']
+
+Здесь помимо обычных атрибутов видим и метод go_to_school
+Попробуем вывести значение атрибута go_to_school для объекта Pavlo
+
+print(Pavlo.go_to_school) # <bound method Student.go_to_school of <__main__.Student object at 0x108d75af0>>
+
+И получаем что для объекта Pavlo, go_to_school это связанный метод класса Student
+Попробуем вызвать метод go_to_school для объекта Pavlo
+
+print(Pavlo.go_to_school())
+# TypeError: Student.go_to_school() takes 0 positional arguments but 1 was given
+
+И получаем ошибку потому, что метод go_to_school получил один аргумент, но при этом параметров у него нет.
+Но в скобках ничего нет, какой аргумент мы передали методу go_to_school?
+Вспомним что такое метод:
+Методы — это функции, привязанные к объекту
+
+Методы классов можно вызывать только к объектам данного класса, и до дефолту методы класса принимают первым аргументом
+объект к которому их вызывают.
+Поэтому все методы классов должны иметь хотя бы один параметр для объекта к которому этот метод будет вызываться.
+И этот параметр по дефолту self, теперь исправим ранее написанный код и вызовем метод класса к экземпляру класса.
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+
+    def go_to_school(self):
+        print("You call method go_to_school")
+
+
+Pavlo = Student()
+
+Pavlo.go_to_school()
+# You call method go_to_school
+
+И теперь ошибки не возникает. 
+Что хранит в себе self?
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+
+    def go_to_school(self):
+        print("You call method go_to_school")
+        print(self.__str__()) # <__main__.Student object at 0x1068c9bb0>
+
+
+Pavlo = Student()
+
+Pavlo.go_to_school()
+
+self хранит адресс объекта в памяти к которому приминяется метод
+
+Но теперь если вызвать метод из класса будет ошибка, ибо метод теперь должен принимать один аргумент в виде объекта
+
+Student.go_to_school()
+# TypeError: Student.go_to_school() missing 1 required positional argument: 'self'
+
+Теперь с помощью методов мы можем легко создавать новые локальные свойства
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+
+    def add_homework(self, hw): # создаем дополнительный аргументт hw
+        self.homework = hw      # в self будет подставляться объект к которому будет вызван метод
+                                # и затем будет создаваться новый локальный атрибут homework
+
+
+Pavlo = Student()
+
+Pavlo.add_homework('math')
+
+print(Pavlo.__dict__)
+# {'homework': 'math'}          # здесь видно что у объекта Pavlo появился локальный атрибут 
+                                # со значением которое мы передали в методе
+
+self используется для создания локальных атрибутов конкретному объекту.
+
+
+
+Инициализатор и финализатор
+
+
+Для начала вспомним что магические методы называются таким образом
+__имя магического метода__
+
+В пайтоне одними их таких есть:
+__init__(self) - вызывается сразу после создания экземпляра класса
+__del__(self) - вызывается перед удалением класса
+
+Так как __init__() запускается сразу после создания класса, можно создавать локальные атрибуты сразу
+вместе с объектом
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+    mark = 10
+
+    def __init__(self, hw):  # запускается сразу после создания класса
+        self.homework = hw   # создаем локальные атрибуты
+
+    def add_homework(self, hw):
+        self.homework = hw
+
+
+# теперь при создании объекта надо передать еще один аргумент в __init__
+Pavlo = Student('history')
+
+print(Pavlo.__dict__)  # {'homework': 'history'}
+
+Когда происходит удаление объекта?
+Когда он становится не нужным, нужный объект - тот на который ссылаются 
+
+class Student:
+    age = 7
+    things = ['bag', 'pencil', 'notebook']
+    mark = 10
+
+    def __init__(self):
+        print("Class was created")
+
+    def add_homework(self, hw):
+        self.homework = hw
+
+    def __del__(self):
+        print("Class was deleted")
+
+
+Pavlo = Student()
+
+if isinstance(Pavlo, Student):
+    print("Object was created")
+
+Pavlo = 10
+
+if Pavlo == 10:
+    print("Object was renamed")
+
+# Class was created
+# Object was created
+# Class was deleted
+# Object was renamed
+
+Здесь видно, что как только объект класса был удален (присвоили другое значение), класс сразу 
+удалился и выполнился __del__()
+
+
+
+Магический метод __new_()
+
+
+__new__(cls) - вызывается перед созданием экземпляра класса
+cls - обязательный параметр в __new__, хранит в себе ссылку на класс
+
+class Student:
+    def __new__(cls):
+        print("Class will be created")
+
+    def __init__(self):
+        print("Class was created")
+
+
+Pavlo = Student()  # Class will be created
+
+__init__ не сработал, а значит объект не был создан
+
+print(Pavlo)  # None
+
+Все это потому, что __new__ должен возвращать адресс нового созданного объекта
+
+class Student:
+    def __new__(cls):
+        print("Class will be created")
+        return supe().__new__(cls)
+
+    def __init__(self):
+        print("Class was created")
+
+Pavlo = Student()  # Class will be created
+
+print(Pavlo)  # <__main__.Student object at 0x10f1ddc70>
+
+Разберем строку
+return super().__new__(cls)
+
+super() - возвращает ссылку на базовый 
+Класс object это базовый класс, который наследуют все классы в пайтоне
+Затем мы приминяем магический метод __new__ и передаем наш класс и получаем экземпляр класса.
+Потом возвращаем его с помощью return и теперь объект создается.
+
+Если передавать аргументы, то они будут передаваться и в __new__ и в __init__
+
+class Student:
+    def __new__(cls, subj):
+        print(subj)  # history
+        return super().__new__(cls)
+
+    def __init__(self, hw):
+        self.homework = hw
+
+
+Pavlo = Student('history')
+
+print(Pavlo.__dict__)  # {'homework': 'history'}
+
+Но зачем нужен __new__ ?
+Одним из способов приминения __new__ есть паттерн Singleton
+Суть паттерна Singleton в том, что может существовать только один экземпляр класса и если создавать новый объект 
+он будет ссылаться на уже созданны.
+Такой паттерн может использоваться например при создании класса для базы данны, если база данных  должна быть одна.
+
+class DataBase:
+    __instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+
+        return cls.__instance
+
+    def __init__(self, user, psw, port):
+        self.user = user
+        self.psw = psw
+        self.port = port
+
+    def __del__(self):
+        DataBase.__instance = None
+
+
+my_db = DataBase('root', '12345678', '3306')
+print(my_db)  # <__main__.DataBase object at 0x10a8c63f0> 
+other_db = DataBase('dmytro', '12345678', '3306')
+print(other_db)  # <__main__.DataBase object at 0x10a8c63f0>
+
+Единственный недостаток это то что атрибуты объекта поменялись на атрибуты второго потому, что сработал __init__
+это можно испровить с помощью __call__, но мы его еще не учили.
+
+
+
+Декораторы @classmethod и @staticmethod
+
+
+С помощью декоратора @classmethod можно создавать методы класса
+
+class User:
+    message = None
+
+    @classmethod  # следующий метод будет методом класса
+    def message(cls, msg):  # вместо self здесь cls и cls содержит ссылку на класс
+        cls.message = msg
+
+    def __init__(self, name, psw):
+        self.name = name
+        self.psw = psw
+
+    def rename_user(self, new_name):
+        self.name = new_name
+
+
+Dima = User('Dima', '12345678')
+Pavlo = User('Pavlo', 'pavlo2001')
+User.message('Hello, everyone!')  # методы класса вызыются от классов
+
+print(Dima.message)  # Hello, everyone!
+print(Pavlo.message)  # Hello, everyone!
+
+Методы класса можно вызывать только через класс и такие методы имеют доступ только к атрибутам класса, а к локальным нет
+
+С помощью декоратора @staticmethod можно создать независимый от объекта и классов метод,
+по факту самую обычную функцию только внутри класса. В таких методах не следует изменять или чтото делать с атрибутами
+
+class User:
+    message = None
+
+    @classmethod  # следующий метод будет методом класса
+    def message(cls, msg):  # вместо self здесь cls и cls содержит ссылку на класс
+        cls.message = msg
+
+    @staticmethod  # следующий метод будет независить от всего
+    # в параметрах не надо указывать специальные параметры self или cls
+    # это по факту самая обычная функция и в таких функция не следует
+    # взаимодействовать с атрибутами
+    def count_friends(friends):
+        return len(friends)
+
+    def __init__(self, name, psw):
+        self.name = name
+        self.psw = psw
+
+    def rename_user(self, new_name):
+        self.name = new_name
+
+
+Dima = User('Dima', '12345678')
+Pavlo = User('Pavlo', 'pavlo2001')
+User.message('Hello, everyone!')
+
+friends = ['John', 'Maria']
+count_frienns = User.count_friends(friends)
+
+
+print(count_frienns)  # 2
+
+
+
+Механизм инкапсуляции
+
+Механизм ограничения доступа к данным и методам класса из вне.
+
+attribute (без одного или двух нижних подчеркиваний вначале) - публичное свойство (public)
+_attribute (с одним нижним подчеркиванием) - режим доступа protected
+(служит для обращения внутри класса и во всех его дочерних классах)
+__attribute (с двумя нижними подчеркиваниями) - режим доступа private
+(служит для обращения только внутри класса)
+
+Возьмем следующий пример
+
+class Student:
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self.grade = grade
+        self.psw = psw
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+
+print(user.name)
+print(user.grade)
+print(user.psw)
+
+И добавим grade режим доступа protected
+
+class Student:
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self._grade = grade
+        self.psw = psw
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+
+print(user.name)  # Dima Oleynik
+print(user._grade)  # 7
+print(user.psw)  # 12345678
+
+Ничего не поменялось, дело в том, что режим доступа protected лишь предостеригает использование
+атрибута вне класса и вне дочерних классов, но на прямую не запрещает использование.
+Такое созданно для программистов и такие атрибуты лучше не трогать за пределами класса и дочерних классов
+
+Теперь добавим режим доступа private
+
+class Student:
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self._grade = grade
+        self.__psw = psw
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+
+print(user.name)  # Dima Oleynik
+print(user._grade)  # 7
+print(user.__psw)  # AttributeError: 'Student' object has no attribute '__psw'
+
+Получаем ошибку потому, что режим доступа private на прямую запрещает использование атрибутов на пределами класса.
+Немного модефицируем код
+
+class Student:
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self._grade = grade
+        self.__psw = psw
+
+    def show_psw(self):
+        # __psw по прежнему можно использовать в классе
+        return self.__psw 
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+
+print(user.name)  # Dima Oleynik
+print(user._grade)  # 7
+print(user.show_psw())  # 12345678
+
+Помимо доступа к атрибутам можно регулировать и доступ к методам
+
+class Student:
+    hw = None
+
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self._grade = grade
+        self.__psw = psw
+
+    def show_psw(self):
+        return self.__psw
+
+    def add_hw(self, *hw):
+        self.hw = hw
+
+    def __count_hometasks(self):  # приватный метод
+        if self.hw == None:
+            return 0
+        return len(self.hw)
+
+    def add_mark(self):
+        if self.__count_hometasks() == 0:
+            mark = 12
+        else:
+            mark = 1
+
+        return f"{self.name}'s mark is {mark}"
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+# user.add_hw('Math', 'English', 'History') # 1
+mark = user.add_mark()  # 12
+print(mark)
+
+Но все ровно получить доступ к private атрибутам и методам можно
+Если вывести все атрибуты __psw
+
+['_Student__count_hometasks', '_Student__psw', '__class__', '__delattr__', 
+'__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', 
+'__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', 
+'__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', 
+'__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_grade', 'add_hw', 'add_mark', 
+'hw', 'name', 'show_psw']
+
+И здесь есть _Student__psw это кодовое имя переменной __psw и через нее можно получить переменную
+Но так делать крайне не рекомендуется !
+
+print(user._Student__psw) # 12345678
+
+Также можно с private методом
+
+print(user._Student__count_hometasks())  # 0
+
+С помощью модуля accessify можно лучше защитить методы
+
+# импортируем декораторы private и protected
+from accessify import private, protected
+
+
+class Student:
+    hw = None
+
+    def __init__(self, name, grade, psw):
+        self.name = name
+        self._grade = grade
+        self.__psw = psw
+
+    def show_psw(self):
+        return self.__psw
+
+    def add_hw(self, *hw):
+        self.hw = hw
+
+    @private  # добавляем декоратор private
+    def __count_hometasks(self):
+        if self.hw == None:
+            return 0
+        return len(self.hw)
+
+    def add_mark(self):
+        if self.__count_hometasks() == 0:
+            mark = 12
+        else:
+            mark = 1
+
+        return f"{self.name}'s mark is {mark}"
+
+
+user = Student('Dima Oleynik', '7', '12345678')
+print(user._Student__count_hometasks())  # 0
+# accessify.errors.InaccessibleDueToItsProtectionLevelException: Student.__count_hometasks()
+# is inaccessible due to its protection level
+
+Для private атрибутов обычно создают специальные методы сеттеры и геттеры которыми отдельно изменяют и выводят private 
+атрибуты
+
+class Student:
+    def __init__(self, name, host):
+        self.__name = name
+        self.__host = host
+
+    def get_name(self):  # для получения __name
+        return self.__name
+
+    def set_name(self, new_value):  # для изменения __name
+        self.__name = new_value
+
+
+
+Магические методы для атрибутов
+
+__setattr__(self, key, value) - вызывается когда атрибуту придают значение, должен присваивать значение атрибуту
+__getattribute__(self, item) - как только идет обращение к атрибуту через экземпляр класса 
+срабатывает вызов этого метода, и этот метод должен возвращать атрибут к которому вызывается
+__getattr__(self, item) - вызывается когда идет обращение к несуществующем атрибуту экземпляра класса
+__delattr__(self, item) - вызывается при удалении атрибута, должен удалять атрибут
+
+Пример __getattribute__(self, item)
+
+class User:
+    status = 'user'
+
+    def __init__(self, name, psw) -> None:
+        self.name = name
+        self.psw = psw
+
+    def __getattribute__(self, item: str):
+        print('You call', item)
+        return object.__getattribute__(self, item)
+        # если убрать эту строку то метод вернет None
+
+user = User('Pavlo', '1234')
+user.status
+# You call status
+
+Блокируем обращение к атрибуту psw
+
+class User:
+    status = 'user'
+
+    def __init__(self, name, psw) -> None:
+        self.name = name
+        self.psw = psw
+
+    def __getattribute__(self, item: str):
+        if item == 'psw':
+            raise ValueError('Underfined password')
+        else:
+            return object.__getattribute__(self, item)
+
+
+user = User('Pavlo', '1234')
+print(user.name)
+# Pavlo
+print(user.psw)
+# ValueError: Underfined password
+
+Пример с __setattr__(self, key, value)
+
+class User:
+    status = 'user'
+
+    def __init__(self, name, psw) -> None:
+        self.name = name
+        self.psw = psw
+
+    def __getattribute__(self, item: str):
+        if item == 'psw':
+            raise ValueError('Underfined password')
+        else:
+            return object.__getattribute__(self, item)
+
+    def __setattr__(self, key, value):
+        if key == 'money':  # key хранит имя атрибута
+            raise ValueError('Inncorrect argument name')
+        elif value == 100:  # value хранит значение атрибута
+            raise ValueError('Inncorrect smth')
+        else:
+            object.__setattr__(self, key, value)
+
+
+user = User('Pavlo', '1234')
+user.money = 100000
+# ValueError: Inncorrect argument name
+user.edu = 100
+# ValueError: Inncorrect smth
+
+Проблема с бесконечной рекурсией
+Рекурсия (recursion) — это поведение функции, при котором она вызывает сама себя, бесконечный цикл вызова функции.
+
+    def __setattr__(self, key, value):
+        self.argument = 'smth'  # когда создается этот атрибут __setattr__ снова вызывается
+        # RecursionError: maximum recursion depth exceeded
+
+Для чего нужна строка 
+
+object.__setattr__(self, key, value) 
+
+Это способ обойти рекурсию, эта строка присваиват атрибуту значение и при этом не вызывает рекурсию.
+Без этой строки никаким атрибутам значения присваиваться не будут.
+
+Пример с __getattr__ 
+
+class User:
+    status = 'user'
+
+    def __init__(self, name, psw):
+        self.name = name
+        self.psw = psw
+
+    def __getattribute__(self, item):
+        return object.__getattribute__(self, item)
+
+    def __setattr__(self, key, value):
+        object.__setattr__(self, key, value)
+
+    def __getattr__(self, name):
+        print(name)
+
+
+user = User('Pavlo', '1234')
+user.homework
+# homework
+# Потому что такого атрибута несуществует
+
+Пример с __delattr__
+
+class User:
+    status = 'user'
+
+    def __init__(self, name, psw):
+        self.name = name
+        self.psw = psw
+        self.homework = None
+
+    def __getattribute__(self, item):
+        return object.__getattribute__(self, item)
+
+    def __setattr__(self, key, value):
+        object.__setattr__(self, key, value)
+
+    def __getattr__(self, name):
+        pass
+
+    def __delattr__(self, name):
+        print(name, 'was deleted')
+        object.__delattr__(self, name)
+        # Здесь удаляем объект, без рекурсии
+
+
+user = User('Pavlo', '1234')
+
+del user.homework
+# homework was deleted
+
+
+
+Паттерн "Моносостояние"
+
+Суть этого паттерна в том, что атрибуты каждого объекта одного класса одинаковые и при добавлении новых 
+они добавляются во все экземпляры класса.
+
+class TheradData:
+    __shared_attrs = {
+        'name': 'Dima',
+        'psw': 1235,
+        'status': True
+    }
+
+    def __init__(self):
+        self.__dict__ = self.__shared_attrs
+        # Здесь мы говорим, что пространство имен экземпляров класса равно словарю __shared_attrs
+        # И соответственно в все что мы добавляем отражается на словаре и на всех экземплярах класса
+
+dataone = TheradData()
+datatwo = TheradData()
+
+print(dataone.__dict__)  # {'name': 'Dima', 'psw': 1235, 'status': True}
+print(datatwo.__dict__)  # {'name': 'Dima', 'psw': 1235, 'status': True}
+
+dataone.message = 'Hello World'
+
+# {'name': 'Dima', 'psw': 1235, 'status': True, 'message': 'Hello World'}
+print(dataone.__dict__)
+# {'name': 'Dima', 'psw': 1235, 'status': True, 'message': 'Hello World'}
+print(datatwo.__dict__)
+
+ 
+
+Свойства property
+
+Объект property создан для упрощения работы с private атрибутами, а конкрентно с сеттерами и геттерами для нижних
+Создаем сеттер и геттер
+
+class Student:
+    def __init__(self, name, host):
+        self.__name = name
+        self.__host = host
+
+    def get_name(self):
+        return self.__name
+
+    def set_name(self, new_value):
+        self.__name = new_value
+
+И добавляем объект property, первым аргументом передаем геттер, а вторым сеттер 
+
+name = property(get_name, set_name)
+
+И теперь мы можем через переменную name взаимодействовать с __name
+
+Dima = Student('Dima', 'localhost')
+
+Dima.name = 'Ne Dima'
+
+print(Dima.name)  # Ne Dima
+# {'_Student__name': 'Ne Dima', '_Student__host': 'localhost'}
+print(Dima.__dict__)
+
+У объектов property приоритет выше чем у других атрибутов поэтому когда мы пишем
+
+Dima.name = 'Whale'
+
+Не создается новый атрибут name, а изменяется __name
+И так происходит даже если у объекта уже есть такое локальное свойство
+
+Dima = Student('Dima', 'localhost')
+Dima.__dict__['name'] = 'Dima3'  # создаем новый локальный атрибут
+Dima.name = 'Ne Dima'
+# '_Student__name': 'Ne Dima', '_Student__host': 'localhost', 'name': 'Dima3'}
+print(Dima.__dict__)
+
+У объекта property есть три метода getter, setter, deleter это декортаторы(функции, которые увеличивают 
+функционал другой функции)
+И с помощью них можно создавать сеттеры и геттеры еще эффективней 
+Ибо сейчас в коде есть дублирование, мы можем взаимодействовать с __name и с помощью объекта property
+И с помощью сеттера и геттера.
+
+name = property()
+# эти строки заменяют передачу аргументов в объект property
+name.getter(get_name)
+name.setter(set_name)
+
+Но мы можем сделать еще эффективней
+
+class Student:
+    def __init__(self, name, host):
+        self.__name = name
+        self.__host = host
+
+    @property
+    # декоратор property делает из метода класса, атрибут
+    def name(self):
+        return self.__name
+
+    @name.setter
+    # теперь вызываем через атрибут name метод setter в качестве декоратора
+    # теперь name это объект property ибо ему доступен метод setter
+    def name(self, new_value):
+        self.__name = new_value
+
+
+Dima = Student('Dima', 'localhost')
+
+Dima.name = 'whale'
+
+print(Dima.name)
+# whale
+
+В этом примере нету дублирования и таким образом чаще всего делают на практике
+Также можно добавить deleter, который будет удалять свойство __name
+
+@name.deleter
+    def name(self):
+        del self.__name
+
+
+Dima = Student('Dima', 'localhost')
+
+del Dima.name
+
+print(Dima.__dict__)
+# {'_Student__host': 'localhost'}
+
+
+
+Дескрипторы (data descriptor и non-data descriptor)
+
+Дескриптор - это класс, который содержит __get__ (non-data) или который содержит __get__, __set__, __set_name__ (data)
+нужен для управления создания атрибутов.
+
+Виды дескрипторов:
+    non-data descriptor содержит магический метод __get__
+    data descriptor содержит __get__, __set__, __set_name__
+
+Пример дескриптора данных (data descriptor)
+
+class Descriptor:
+    def check_data(self, string):
+        if not isinstance(string, str):
+            raise TypeError("Name and surname must be")
+
+    # self ссылка на создаваемый объект класса
+    # owner ссылка на класс, в котором создан объект
+    # name имя атрибута
+    def __set_name__(self, owner, name):
+        self.name = '__' + name
+
+    # self ссылка на создаваемый объект класса
+    # instance ссылается на класс, в котором был вызван
+    # owner ссылка на класс, в котором создан объект
+    def __get__(self, instance, owner):
+        return instance.__dict__[self.name]
+
+    # self ссылка экземпляр класса дескриптора
+    # instance ссылается на класс, в котором был вызван
+    # value значение
+    def __set__(self, instance, value):
+        self.check_data(value)
+        instance.__dict__[self.name] = value
+
+class User:
+    name = Descriptor()  # создаем через метод __set_name__
+    surname = Descriptor()  # два дескриптора
+
+    def __init__(self, name, surname):
+        self.name = name  # через __set__ задаем нужные значения
+        self.surname = surname
+
+
+dima = User('Dima', 'Oleynik')
+print(dima.__dict__)  # {'__name': 'Dima', '__surname': 'Oleynik'}
+# через __get__ получаем нужное нам значение
+print(dima.name)  # Dima
+
+Плюс дескриптора в том, что мы создаем универсальный геттер и сеттер, избегая дублирования.
+Заменим прямое обращение к областям видимости переменной, на обращение через методы
+
+class Descriptor:
+    def check_data(self, string):
+        if not isinstance(string, str):
+            raise TypeError("Name and surname must be")
+
+    def __set_name__(self, owner, name):
+        self.name = '__' + name
+
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+
+    def __set__(self, instance, value):
+        self.check_data(value)
+        setattr(instance, self.name, value)
+
+Теперь реализуем дескриптор не данных
+
+class NonDataDescriptor:
+    def __set_name__(self, owner, name):
+        self.name = '__name'
+
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+
+Добавляем дескриптор не данных в класс
+
+name_read = NonDataDescriptor()
+
+И выведем его значения
+
+print(dima.name_read, dima.__dict__)
+# Dima {'__name': 'Dima', '__surname': 'Oleynik'}
+
+Если попробовать изменить значение с помощью дескриптора не данных, то создастся новый атрибут 
+ 
+dima.name_read = 'Whale'
+print(dima.name_read, dima.__dict__)
+# Whale {'__name': 'Dima', '__surname': 'Oleynik', 'name_read': 'Whale'}
+
+
+
+Магический метод __call__
+
+dunder-методы (от англ. сокращения double underscope)
+Если попробовать вызвать обычный объект в пайтоне получим слудующую ошибку
+
+class Counter:
+    def __init__(self):
+        self.__counter = 0
+
+
+example = Counter()
+
+example()
+# TypeError: 'Counter' object is not callable
+
+Тоесть этот объект не вызываемый, но при этом когда мы вызываем класс ошибки не происходит
+Потому что у класса определен дандер метод __call__
+
+
+dima = User()
+           ↑
+        __call__(self, *args, **kwargs):
+            obj = self.__new__(self, *args, **kwargs)  # сначала вызывает __new__
+            self.__init__(obj, *args, **kwargs)        # затем также __init__
+            return obj                                 # возвращаем адресс объекта 
+                                                       # так как __new__ должен возвращать адресс объекта
+                                            
+Определим для нашего объекта
+
+class Counter():
+    def __init__(self):
+        self.__counter = 0
+
+    def __call__(self, *args, **kwargs):
+        self.__counter += 1
+        return self.__counter
+
+
+counter = Counter()
+counter()
+counter()
+
+result = counter
+print(result())  # 3
+# Потому что мы три раза вызвали объект counter
+
+В __call__ также можно передавать аргументы
+
+class Counter():
+    def __init__(self):
+        self.__counter = 0
+
+    def __call__(self, step=1, *args, **kwargs):
+        self.__counter += step
+        return self.__counter
+
+
+counter = Counter()
+counter()
+counter(5)
+
+result = counter
+print(result())  # 7
+
+Реализация декоратора с помощью __call__
+
+class FuncDecorator:
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, a, b, *args, **kwargs):
+        return self.func(a, b) / 2
+
+
+@FuncDecorator
+def calculator(a, b):
+    return a + b
+
+
+print(calculator(4, 7))
+# 5.5
+
+Вот реализации того же, только через обычные декораторы
+
+def decorator(func):
+    def wrapper(a, b):
+        return func(a, b) / 2
+
+    return wrapper
+
+
+@decorator
+def calculator(a, b):
+    return a + b
+
+
+print(calculator(4, 7))
+# 5.5
+
+
+
+Магические методы __str__() __repr__() __len__() __abs__()
+
+Магические методы отличаются от обычных тем, что вызываются сами в определенный момент
+
+__str__() - срабатывает в момент отображения информации об объекте класса
+для пользователей (например print)
+__repr__() - срабатывает в момент отображения информации об объекте класса
+в режиме отладки (для разработчиков)
+
+Пример использования __repr__
+
+class Cat:
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"{self.__class__}: {self.name}"
+
+
+cat = Cat('Vasiliy')
+print(cat)
+# <class '__main__.Cat'>: Vasiliy
+
+Но print это же считается выводом для пользователей, объявис __str__()
+
+class Cat:
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"{self.__class__}: {self.name}"
+
+    def __str__(self):
+        return f"Cat's name is {self.name}"
+
+
+cat = Cat('Vasiliy')
+print(cat)
+# Cat's name is Vasiliy
+
+Как получить __repr__ сообщение?
+Если зайти в debug console и ввести cat мы получим нужную строку
+(debug console)
+
+cat = Cat('Vasiliy')
+
+cat
+<class '__main__.Cat'>: Vasiliy
+
+print(cat)
+Cat's name is Vasiliy
+
+__len__() - срабатывает при вызове встроенной функции len()
+
+class School:
+    def __init__(self, *subjects):
+        self.__subjects = subjects
+
+    def __len__(self):
+        return len(self.__subjects)
+
+
+school = School('math', 'english', 'ukranian', 'history')
+print(len(school))  # 4
+
+__abs__() - срабатывает при вызове abs
+
+class Numbers:
+    def __init__(self, numb: int):
+        self.numb = numb
+
+    def __abs__(self):
+        return abs(self.numb)
+
+
+number = Numbers(-11)
+print(abs(number))  # 11
+
+
+
+Магические методы __add__() __sub__() __mul__() __truediv__()
+
+__add__() - для операций сложения +
+__sub__() - для операций вычитания -
+__mul__() - для операций умножения *
+__truediv__() - для операций деления / 
+__floordiv__() - для операций деления нацело //
+__mod__()  - для операций остатка от деления %
+
+Это класс с атрибутом seconds, show_time выводит секунды в формате HH:MM:SS
+
+class Clock:
+    __DAY = 86400
+
+    def __init__(self, seconds):
+        if not isinstance(seconds, int):
+            raise TypeError("Seconds must be integer")
+
+        self.seconds = seconds % self.__DAY
+
+    def show_time(self):
+        seconds = self.seconds % 60
+        minutes = (self.seconds // 60) % 60
+        hours = (self.seconds // 3600) % 24
+
+        return f"{self.__get_formatted(hours)}:{self.__get_formatted(minutes)}:{self.__get_formatted(seconds)}"
+
+    @staticmethod
+    def __get_formatted(x):
+        return str(x).rjust(2, '0')
+
+    def __add__(self, second_value):
+        return Clock(self.seconds + second_value)
+        # __add__ принимает число (second_value)
+        # и возвращает новый объект, передавая значение секунд увеличенное на second_value
+
+clock = Clock(7401)
+print(clock.show_time())
+# 02:03:21
+
+clock = clock + 30
+print(clock.show_time())
+# 02:03:51
+
+Дандер метод __add__ вызывается при использовании + с любым объектом 
+Изначально __add__ не определен, поэтому если попробовать написать
+
+clock + 10
+# TypeError: unsupported operand type(s) for +: 'Clock' and 'int'
+
+Но если его переопределить (пример выше) тогда можно придать значению строке 
+
+clock + 10
+
+Методу __add__ не обязательно присваивать его логическое приминение
+Реалезуем добавление товара в корзину с использованием __add__
+
+class Cart:
+    max_count_prod = 5  # максимальное количество товара в корзине
+
+    def __init__(self, *product):
+        if len(product) > self.max_count_prod:  # провиряем не привышает ли количество товара в корзине
+            raise ValueError("Cart is full")
+
+        self.product = product
+
+    def __add__(self, added_product):
+        return Cart(*self.product, added_product)
+
+
+cart = Cart('apple', 'banana', 'orange')
+
+cart = cart + 'onion'
+print(cart.product)
+# ('apple', 'banana', 'orange', 'onion')
+
+Тоесть эта строка 
+
+cart = cart + 'onion'
+
+Это тоже самое, что и
+
+cart = cart.__add__('onion')
+
+Но что будет если поменять местами объект нашего класса и например число
+
+clock2 = 100 + clock
+# TypeError: unsupported operand type(s) for +: 'int' and 'Clock'
+
+Чтобы пофиксить это можно прописать __radd__() это тоже самое что и __add__(), но вызывается
+когда к какому то числу добавляю объект 
+
+def __radd__(self, second_value):
+        return self + second_value
+        # после этой строки будет вызываться __add__
+
+И ошибка пропала.
+Также с помощью модификации __iadd__, которая также есть у всех арифметических магических методов
+можно настраивать операцию +=
+P.S. += отработает и без определения метода, но в таком случае будет создаваться новый объект, 
+а в данном случае это не нужно
+
+def __iadd__(self, second_value):
+    self.seconds += second_value
+    # просто изменяем значение seconds
+    return self
+    # и возвращаем тотже объект
+
+
+
+Магические методы операторов сравнения __eq__, __ne__, __lt__, __le__, __gt__, __ge__
+
+__eq__() - для равенства ==
+__ne__() - для неравентсва !=
+__lt__ - для оператора меньше <
+__le__ - для оператора меньше или равно <=
+__gt__ - для оператора больше > 
+__ge__ - для оператора больше или равно >=
+
+Пример с __eq__
+
+def __eq__(self, value: object) -> bool:
+        if not isinstance(value, (Clock, int)):
+            raise TypeError("Second operand must be Clock object")
+
+        sc = value if isinstance(value, int) else value.seconds
+        return self.seconds == sc
+
+После определения такого метода сравнение не будет вызывать ошибок
+
+clock1 = Clock(1000)
+clock2 = Clock(1000)
+
+print(clock1 == clock2)  # True
+print(clock1 == 2000)  # False
+
+Но также автоматически заработает оператор != 
+
+print(clock1 != clock2)  # False
+print(clock1 != 2000)  # True
+
+Он по дефолту возвращает not (self.__eq__(value))
+Определим метод __lt__
+
+def __lt__(self, value: object) -> bool:
+        if not isinstance(value, (Clock, int)):
+            raise TypeError("Second operand must be Clock object")
+
+        sc = value if isinstance(value, int) else value.seconds
+        return self.seconds < sc
+
+Теперь можно сравнить объекты Clock
+
+clock1 = Clock(1000)
+clock2 = Clock(1001)
+
+print(clock1 > clock2)  # False
+
+И аналочно можно сравнить таким образом
+
+print(clock1 < clock2)  # True
+
+Питон просто меняет местами операнды и вызывает __lt__
+
+clock1 > clock2
+       ↓
+clock2 < clock1
+
+Но можно переопределить метод __gt__ и тогда будут выполняться другие действия при использовании >
+
+def __gt__(self, value: object) -> str:
+    return "U call __gt__"
+
+print(clock1 > clock2)  # U call __gt__
+
+Абсолютно также можно переопределять методы __le__ и __ge__
+
+
+
+Магические методы __eg__ и __hash__
+
+Функция hash() в питончике хеширует объект и выводит его хэш.
+! Хешировать можно только неизменяемые объекты 
+И для одинаковых объектов хэши будут одинаковые
+Пример:
+
+print(hash('Python') == hash('Python'))  # True
+print(hash((1, 2, 3)) == hash((1, 2, 3)))  # False
+print(hash([True, False, True]))  # TypeError: unhashable type: 'list'
+
+Если хэши одинаковые, то это не гарантирует, что объекты одинаковые (происходит крайне редко)
+
+Но где это можно использовать?
+Например в словаре ключи хранятся в виде (хэш ключа, ключ) это объясняет то, что ключами в 
+словаре могут быть только неизменяемые объекты. Для чего это? 
+Словарь ищет значения по хэшу, а не по названию ключа. В пайтоне есть быстрый алгоритм поиска хэшей.
+Такой подход значительно ускоряет процесс поиска ключей.
+
+Объекты пользовательских классов изначально пайтоном подразумеваются как неизменяемые, тоесть
+к ним можно применять hash()
+Создадим два объекта пользовательского класса и сравним их хэши
+
+class Point:
+    def __init__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
+
+
+point1 = Point(10, 15)
+point2 = Point(10, 15)
+
+print(hash(point1))  # 279012846
+print(hash(point2))  # 279012840
+
+print(hash(point1) == hash(point2))  # False
+
+И казалось бы объекты одинаковые, но хэши разные.
+Дело в том, что для функции hash() эти объекты разные, ибо 
+
+print(point1 == point2)  # False
+
+Но можно же исправить это с помощью __eq__?
+
+def __eq__(self, value: object) -> bool:
+    return (self.x, self.y) == (value.x, value.y)
+
+Но тогда hash() перестанет работать на наши объекты потому, что теперь нарушается стандартный механизм
+Переопределим __hash__, чтоб все работало как нужно
+
+def __hash__(self) -> int:
+    return hash((self.x, self.y))
+    # теперь будем хешировать кортеж атрибутов объекта 
+
+И теперь все хешируется и сравнивается так как нам нужно.
+Теперь объекты с одинаковыми атрибутами воспринимаются как одинаковые объекты.
+
+
+
+Магический метод __bool__
+
+bool() - конвертирует объект в True или False
+Функция bool всегда возвращает True для экземпляров пользовательского класса
+
+class Point:
+    def __init__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
+
+
+point = Point(10, 15)
+print(bool(point))  # True
+
+Но мы можем его переопределить с помощью:
+__len__() - вызывается функцией bool(), если не определен __bool__
+__bool__() - вызывается в приоритетном порядке функцией bool()
+
+Пример с __bool__
+
+class Cart:
+    __MAX_PROD = 10
+
+    def __init__(self, *prod):
+        if len(prod) > self.__MAX_PROD:
+            raise ValueError("Cart is full")
+
+        self.prod = prod
+
+    def __len__(self) -> int:
+        return len(set(self.prod))
+
+    def __bool__(self) -> bool:
+        return len(self) == len(self.prod)
+
+
+cart = Cart('apple', 'orange', 'eggplant', 'lime', 'tomato',)
+
+if cart:
+    print("Cart hasn't got any dublicates")
+else:
+    print("Cart has got dublicates")
+
+
+
+Магические методы __getitem__, __setitem__, __delitem__
+
+__getitem__(self, item) - вызывается при попытке получить объек по ключу
+    item - ключ (пишется в квадратных скобках)
+__setitem__(self, key, value) - запись значения в последовательность
+    key - ключ по которому записывать значение
+    value - значение для записи
+__delitem__(self, key) - удаление элемента последовательности по индексу
+    key - индекс для удаления
+
+Пример реализации данных дандер методов
+
+class Student:
+    def __init__(self, name: str, marks: list) -> None:
+        self.name = name
+        self.marks = marks
+
+    def __getitem__(self, item):  # в item передается то что в квадратных скобках
+        if not 0 <= item < len(self.marks):
+            raise IndexError("Index out of the range :(")
+        return self.marks[item]
+
+    def __setitem__(self, key, value):
+        if not isinstance(key, int):
+            raise IndexError("Invalid index")
+
+        self.marks[key] = value
+        
+
+    def __delitem__(self, key):
+        if not 0 <= key < len(self.marks):
+            raise IndexError("Index out of the range :(")
+    
+        del self.marks[key]
+
+s1 = Student('Dima', [5, 5, 4, 2, 3])
+print(s1.marks)  # [5, 5, 4, 2, 3]
+
+print(s1[2])  # 4
+
+s1[0] = 4
+print(s1.marks)  # [4, 5, 4, 2, 3]
+
+del s1[2]
+print(s1.marks)  # [4, 5, 2, 3]
+
+
+
+Магические методы __iter__ и __next__
+
+
+Итератор - это интерфейс для перебора итерируемого объекта
+Чтоб создать итератор нужно использовать функцию iter() и передать в нее итерируемый объект
+
+spisok = [1, 4, 5, 16, 19, 33]
+
+iterator = iter(spisok)
+
+print(iterator)  # <list_iterator object at 0x10f31da20>
+
+Итератор хранит ссылку на итерируемый объект, текущую позицию, состояние итерации.
+Состояние итерации: Любая дополнительная информация, необходимая для поддержания состояния итерации. 
+Это может включать флаги окончания итерации, дополнительные счетчики или буферы.
+
+Функция next() принимает итератор и возвращает элемент в текущей позиции и переходит к следующему, поэтому следующий
+вызов next() выведет уже следующий объект.
+
+Пример создания и использования итератора
+
+spisok = [1, 4, 5, 16, 19, 33]
+
+iterator = iter(spisok)  # создаем итератор
+
+print(next(iterator))  # 1
+print(next(iterator))  # 4
+print(next(iterator))  # 5
+
+Пайтон вызывает итератор в множестве ситуаций, например в циклах.
+
+С помощью __iter__ и __next__ можно создавать собственные итераторы.
+
+__iter__(self) - получение итератора для перебора объекта
+__next__(self) - переход к следующему значению и его считывание
+
+Определим __next__
+
+class RangeIterator:
+    def __init__(self, range_for_iteration):
+        self.range_for_iteration = range_for_iteration
+        self.index = 0
+
+    def __next__(self):
+        if self.index >= len(self.range_for_iteration):
+            raise StopIteration
+        
+        self.element = self.range_for_iteration[self.index]
+        self.index += 1
+
+        return self.element
+
+
+list_for_iteration = RangeIterator(range(0, 10, 2))
+
+print(list_for_iteration.__next__())  # 0
+print(list_for_iteration.__next__())  # 2
+print(list_for_iteration.__next__())  # 4
+print(list_for_iteration.__next__())  # 6
+
+Здесь мы объект подобный диапазону и опредиляем простую логику магического метода __next__
+Также можно вместо дандер метода __next__ использовать функцию next()
+
+print(next(list_for_iteration))  # 0
+print(next(list_for_iteration))  # 2
+print(next(list_for_iteration))  # 4
+print(next(list_for_iteration))  # 6
+
+Но если попробовать перебрать циклом наш объект 
+
+for element in list_for_iteration:
+    print(element)  # TypeError: 'RangeIterator' object is not iterable
+
+Все это потому, что у нашего объекта не определен метод __iter__ который и отвечает за итерируемость 
+Определим метод __iter__
+
+def __iter__(self):
+    self.index = 0  # переносим сюда index, чтоб next() не вызывался без определения итератора
+    return self
+
+И попробуем еще раз перебрать циклом объект
+
+for element in list_for_iteration:
+    print(element)  
+
+# 0
+# 2
+# 4
+# 6
+# 8
+
+
+
+Наследование
+
+Наследование это когда один класс, будто подключается к другому и получает доступ к его
+атрибутам и методам. Но при этом у родительского класса доступа к дочернему не будет
+
+class Animal:
+    description = 'Animal is a blablabla...'
+
+class Cat(Animal):
+    def do_meow(self):
+        print('Meow :)')
+
+cat = Cat()
+
+print(cat.description)
+
+В этом коде иерархия наследования выглядит так:
+
+Animal (родительский или базовый класс)
+  ↑
+ Cat (подкласс или дочерний класс)
+
+В родительские классы нужно выносить общие для разных классов методы и атрибуты.
+Поиск методов и атрибутов происходит сначала в подклассе, а потом в родительском.
+
+class Animal:
+    desc = "This is animal"
+    def show_type_animal(self):
+        print(self.__class__)
+
+class Dog(Animal):
+    food = False
+    def feed_me(self):
+        self.food = True
+
+class Cat(Animal):
+    age = 0
+    def get_old(self):
+        age += 1
+
+richi = Dog()
+barsik = Cat()
+
+richi.show_type_animal()  # <class '__main__.Dog'>
+barsik.show_type_animal()  # <class '__main__.Cat'>
+
+Параметр self при вызове через объекты дочерних классов принимает значение объекта ДОЧЕРНЕГО класса
+В базовом классе не следует вызывать методы дочерних классов, а то можно получить в лоб)
+
+
+
+Наследование классов от класса object
+
+Если прописать пустой класс и посмотреть на доступные методы и атрибуты
+
+class Student:
+    pass
+
+Student.
+        ↑
+тогда можно увидеть много различных атрибутов и методов, которые я не прописывал
+Все эти методы и атрибуты берутся из базового класса object
+Тоесть данный класс как и все можно определить следующим образом
+
+class Student(object):
+    pass
+
+Такое "автоматическое" наследование создано для обеспечения базового функционала.
+С помощью функции issubclass() можно определить является ли класс, подклассом для другого класса
+
+issubclass(ДочернийКласс, БазовыйКласс)
+
+Пример:
+
+class Student:
+    pass
+
+
+print(issubclass(Student, object))  # True
+print(issubclass(object, Student))  # False
+
+Все стандартные типы данных являются классами
+
+print(issubclass(list, object))  # True
+
+!В issubclass можно прописывать только классы
+Тоесть можно переопределить некоторые методы или атрибуты базовых классов-типов данных
+
+print([1, 2, 3])  
+# [1, 2, 3]
+
+class OtherList(list):
+    def __str__(self) -> str:
+        return " ".join(map(str, self))
+
+numbers = OtherList([1, 2, 3])
+print(numbers)
+# 1, 2, 3
+
+# Метод join()принимает все элементы итерируемого объекта и объединяет их в одну строку.
+# Функция map()выполняет указанную функцию для каждого элемента в итерации. Элемент отправляется в функцию в качестве параметра.
+
+
+
+Наследование. Функция super() и делегирование
+
+Когда мы создаем подкласс с новым методом, это называется разширение (extended).
+
+class Student:
+    homework = []
+
+class Teacher(Student):
+    def add_hw(self):
+        self.homework.append('math')
+
+В этом случае Teacher это расширенная версия Student
+Но если мы переопределяем уже существующий метод в новом классе, это называется переопределение (overriding).
+
+class Student:
+    homework = False
+    def do_hw(self):
+        self.homework = True
+
+class Teacher(Student):
+    def do_hw(self):
+        self.homework = False 
+
+Здесь уже в Teacher я переопределил метод do_hw, тоесть это переопределение (overriding).
+Вынесем общий метод из двух классов:
+
+class School:
+    def __init__(self, name, password) -> None:
+        self.name = name
+        self.password = password
+
+class Student(School):
+    status = 'student'
+
+class Teacher(School):
+    status = 'teacher'
+ 
+s1 = Student('Dmytro', 12345678)
+t1 = Teacher('Katerina Mikolaivna', None)
+
+В этом коде __init__ будет вызываться и для класса Student, и для класса Teacher
+Таким образом можно избежать дублирования кода, но что если я хочу добавить новый локальный атрибут в Teacher?
+Здесь можно использовать overriding
+
+class Teacher(School):
+    status = 'teacher'
+
+    def __init__(self, name, password):
+        super().__init__(name, password)
+        self.zlost = 100000
+
+super() возвращает ссылку на базовый класс 
+Здесь я явно вызвал метод __init__ через базовый класс и передал в него аргументы.
+Потом просто добавил создание нового локального атрибута.
+
+print(s1.__dict__)  # {'name': 'Dmytro', 'password': 12345678}
+print(t1.__dict__)  # {'name': 'Katerina Mikolaivna', 'password': None, 'zlost': 100000}
+
+Вызов методов базового класса через функция super() называется делегирование.
+
+
+
+Наследование. Атрибуты private и protected
+
+
+class School:
+    def __init__(self, name, password):
+        self.__name = name
+        self.__password = password
+
+class Student(School):
+    def __init__(self, name, password, grade):
+        super().__init__(name, password)
+        self.__grade = grade
+
+student = Student('Dmytro', '1234578', 8)
+print(student.__dict__)
+# {'_School__name': 'Dmytro', '_School__password': '1234578', '_Student__grade': 8}
+
+Из этого примера видно что атрибуты name и password создаются из класса School, а grade из Student.
+Соответственно мы не можем получить к ним доступ из класс Student
+
+class School:
+    def __init__(self, name, password):
+        self.__name = name
+        self.__password = password
+
+class Student(School):
+    def __init__(self, name, password, grade):
+        super().__init__(name, password)
+        self.__grade = grade
+
+    def get_info(self):
+        return self.__name, self.__password
+
+student = Student('Dmytro', '1234578', 8)
+
+print(student.get_info())
+# AttributeError: 'Student' object has no attribute '_Student__name'. Did you mean: '_Student__grade'?
+
+Но из School получить к ним доступ мы можем
+
+class School:
+    def __init__(self, name, password):
+        self.__name = name
+        self.__password = password
+
+    def get_info(self):
+        return self.__name, self.__password
+
+class Student(School):
+    def __init__(self, name, password, grade):
+        super().__init__(name, password)
+        self.__grade = grade
+
+student = School('Dmytro', '1234578')
+
+print(student.get_info())
+# ('Dmytro', '1234578')
+
+Это все потому, что к private атрибутам можно получить доступ только в классе, в котором они созданы.
+Чтобы к атрибуту можно было обращатся не только в его классе, а и в дочерних классах можно использовать
+режим доступа protected (строка 458)
+Также работает и с методами:
+
+class School:
+    def __init__(self, name, password):
+        self._name = name
+        self._password = password
+
+    def _change_name(self, new_name):
+        self._name = new_name
+
+class Student(School):
+    def __init__(self, name, password, grade):
+        super().__init__(name, password)
+        self._grade = grade
+
+    def get_info(self):
+        return self._name, self._password
+
+student = Student('Dmytro', '1234578', 8)
+
+student._change_name('Whale')
+print(student.__dict__)
+# {'_name': 'Whale', '_password': '1234578', '_grade': 8}
+
+
+
+Полиморфизм
+
+
+Полиморфизм - это возможность работы с совершенно разными объектами единым образом (через единый интерфейс).
+Представим ситуацию, что у нас есть много объектов разных классов и у каждого есть метод
+
+class Dog:
+    def make_dog_sound(self):
+        return "RafRafRaf"
+    
+class Cat:
+    def make_cat_sound(self):
+        return "MewMewMew"
+
+class Cow:
+    def make_cow_sound(self):
+        return "MuMuMu"
+
+И нам нужно вызвать к каждому объекту его метод.
+В тамом случае нам прийдется к каждому объекту вызывать его метод, а что делать если таких классов десять?
+Чтобы не страдать копипастом можно использовать полиморфизм.
+В каждом классе мы назовем метод одинаково и через цикл будем вызывать его к каждому объекту.
+
+class Dog:
+    def make_sound(self):
+        return "RafRafRaf"
+    
+class Cat:
+    def make_sound(self):
+        return "MewMewMew"
+
+class Cow:
+    def make_sound(self):
+        return "MuMuMu"
+
+animals = [Dog(), Cat(), Cow()]
+
+for animal in animals:
+    print(animal.make_sound())
+
+# RafRafRaf
+# MewMewMew
+# MuMuMu
+
+Но такой механизм сломается если какойто из классов не будет иметь данный метод.
+И теперь нам поможет абстрактный метод.
+Создадим базовый для всех этих методов класс в котором определим общий метод. Чтобы в случае отсутствия
+этого метода в каком-то классе сработал этот "запасной" метод.
+
+class Animal:
+    def make_sound(self):
+        return "The sound of someone"
+    
+class Dog(Animal):
+    def make_sound(self):
+        return "RafRafRaf"
+    
+class Cat(Animal):
+    def make_sound(self):
+        return "MewMewMew"
+
+class Cow(Animal):
+    def make_sound(self):
+        return "MuMuMu"
+
+animals = [Dog(), Cat(), Cow()]
+
+for animal in animals:
+    print(animal.make_sound())
+
+Теперь этот скрипт отработает при любом раскладе.
+
+Абстрактный метод - это метод, который обязательно нужно переопределить в дочерних классах и сам по себе
+он не имеет реализации.
+
+
+
+Множественное наследование
+
+Множественное наследование - это когда у дочернего класса есть несколько базовых.
+В таком случае важно понимать порядок поиска методов в классах.
+Этот порядок определяется с помощью алгоритма MRO (Method Resolution Order).
+Его можно вывести с помощью колекции __mro__.
+
+class Calculator:
+    def calculate(self, expression):
+        return eval(expression)
+    
+
+class Photo:
+    count_photo = 0
+
+    def take_photo(self):
+        self.count_photo += 1
+
+
+class SmartPhone(Calculator, Photo):  # SmartPhone наследует и Calculator, и Photo
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+
+samsung = SmartPhone('Dmytro-Oleynik', '12345678')
+
+print(samsung.calculate("2+2"))  # 4
+samsung.take_photo()
+
+print(samsung.__dict__)   # {'username': 'Dmytro-Oleynik', 'password': '12345678', 'count_photo': 1}
+
+И теперь выводим MRO для SmartPhone
+
+print(SmartPhone.__mro__)  
+# [<class '__main__.SmartPhone'>, <class '__main__.Calculator'>, <class '__main__.Photo'>, <class 'object'>]
+
+И видем, что методы объекты SmartPhone будут искать сначала в самом класса SmartPhone, потом по порядку
+в базовых классах, и уже потом в класса object.
+Но что будет если мы захотим сделать локальные атрибуты в базовых классах:
+
+class Calculator:
+    def __init__(self):
+        self.results_history = []
+
+    def calculate(self, expression):
+        self.results_history.append(eval(expression))
+        return eval(expression)
+    
+
+class Photo:
+    def __init__(self):
+        self.count_photo = 0
+
+    def take_photo(self):
+        self.count_photo += 1
+
+
+class SmartPhone(Calculator, Photo):  # SmartPhone наследует и Calculator, и Photo
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+
+samsung = SmartPhone('Dmytro-Oleynik', '12345678')
+
+print(samsung.__dict__)
+# {'username': 'Dmytro-Oleynik', 'password': '12345678'}
+
+Здесь видно, что инициализаторы в базовых классах не отработали.
+И это логично, ведь объекты базовых классов не создаются и явно мы их также не вызываем.
+Вызовем явно инициализатор базового класса:
+
+class Calculator:
+    def __init__(self):
+        self.results_history = []
+
+    def calculate(self, expression):
+        self.results_history.append(eval(expression))
+        return eval(expression)
+    
+
+class Photo:
+    def __init__(self):
+        self.count_photo = 0
+
+    def take_photo(self):
+        self.count_photo += 1
+
+
+class SmartPhone(Calculator, Photo):  # SmartPhone наследует и Calculator, и Photo
+    def __init__(self, username, password):
+        super().__init__()
+        self.username = username
+        self.password = password
+
+
+samsung = SmartPhone('Dmytro-Oleynik', '12345678')
+
+print(samsung.__dict__)
+# {'results_history': [], 'username': 'Dmytro-Oleynik', 'password': '12345678'}
+
+Теперь у нас вызвался только инициализатор первого базового класса.
+Но как вызвать все инициализаторы?
+Для этого в каждом инициализаторе нужно прописывать 
+
+super().__init__()
+
+Функция super() при множественном наследовании работает по алгоритму MRO.
+Исправим мой код:
+
+class Calculator:
+    def __init__(self):
+        super().__init__()  # по MRO следующий класс это Photo поэтому функция super() ссылается на Photo
+        self.results_history = []
+
+    def calculate(self, expression):
+        self.results_history.append(eval(expression))
+        return eval(expression)
+    
+
+class Photo:
+    def __init__(self):
+        self.count_photo = 0
+
+    def take_photo(self):
+        self.count_photo += 1
+
+
+class SmartPhone(Calculator, Photo):  # SmartPhone наследует и Calculator, и Photo
+    def __init__(self, username, password):
+        super().__init__()
+        self.username = username
+        self.password = password
+
+
+samsung = SmartPhone('Dmytro-Oleynik', '12345678')
+
+samsung.calculate("2+2")
+samsung.calculate("10/2")
+samsung.calculate("5*5")
+
+for i in range(9):
+    samsung.take_photo()
+
+print(samsung.__dict__)
+# {'count_photo': 9, 'results_history': [4, 5.0, 25], 'username': 'Dmytro-Oleynik', 'password': '12345678'}
+
+
+Как вызвать метод из конкретного родительского класса, если метод с таким же именем уже есть в другому
+базовом классе?
+Есть два способа:
+1) Напрямую вызвать метод
+
+class Calculator:
+    def __init__(self):
+        super().__init__()
+        self.results_history = []
+
+    def calculate(self, expression):
+        self.results_history.append(eval(expression))
+        return eval(expression)
+    
+    def show_info(self):
+        print(self.results_history)
+
+class Photo:
+    def __init__(self):
+        self.count_photo = 0
+
+    def take_photo(self):
+        self.count_photo += 1
+
+    def show_info(self):
+        print(self.count_photo)
+
+
+class SmartPhone(Calculator, Photo):  # SmartPhone наследует и Calculator, и Photo
+    def __init__(self, username, password):
+        super().__init__()
+        self.username = username
+        self.password = password
+
+
+samsung = SmartPhone('Dmytro-Oleynik', '12345678')
+
+samsung.take_photo()
+samsung.take_photo()
+samsung.take_photo()
+
+Photo.show_info(samsung)  # 3 
+# передаем в параметр self, ведь вызываем от класса и автоматически self не подставляться
+
+
+
+Колекция __slots__
+
+__slots__ хранит в себе все локальные атрибуты, которые могут быть у объекта
+Example:
+
+class Student:
+    __slots__ = ('name', 'password')
+
+    def __init__(self, name, password):
+        self.name = name
+        self.password = password
+
+
+s1 = Student('Dmytro-Oleynik', '123456789')
+
+Если теперь попытаться добавить новый ЛОКАЛЬНЫЙ атрибут, тогда ничего не получится
+
+s1.grade = 7  # AttributeError: 'Student' object has no attribute 'grade'
+
+Но атрибуты класса добавлять мы все еще можем
+
+Student.grade = 7
+print(dir(s1))
+# ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',
+# '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__',
+# '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__',
+# '__slots__', '__str__', '__subclasshook__', 'grade', 'name', 'password']
+
+Также если у объекта определена колеция __slots__, тогда колекция __dict__ у данного объекта отсутствует
+Ведь как раз колекция __dict__ отвечает за добавление, удаление, изменение локальных своиств.
+Но мы можем по прежнему изменять локальные атрибуты, прописанные в __slots__.
+
+Также колекция __slots__ значительно уменьшает объем памяти выделяемый под объект.
+И таким образом оптимизирует программу.
+
+
+Колекция __slots__ при наследовании с property
+
+При наследовании важно понимать, что колекция __slots__ не наследуется напрямую:
+
+class Student:
+    __slots__ = ['username', 'password']
+
+    def __init__(self, username, password) -> None:
+        self.username = username
+        self.password = password
+
+
+class Teacher(Student):
+    pass
+
+
+teacher = Teacher('Dmytro-Oleynik', '12345678')
+teacher.hw = []
+
+print(teacher.__dict__)
+# {'hw': []}
+
+Здесь видно, что у объекта teacher есть колекция __dict__ тоесть колекции __slots__ нет.
+Но если создать даже пустую колекцию __slots__
+
+class Student:
+    __slots__ = ['username', 'password']
+
+    def __init__(self, username, password) -> None:
+        self.username = username
+        self.password = password
+
+
+class Teacher(Student):
+    __slots__ = []
+
+
+teacher = Teacher('Dmytro-Oleynik', '12345678')
+teacher.hw = []
+# AttributeError: 'Teacher' object has no attribute 'hw'
+
+print(teacher.__dict__)
+
+Тогда возникнет ошибка, ведь в колекции __slots__ нет атрибута hw.
+НО если попробовать создать локальный атрибут username
+
+class Student:
+    __slots__ = ['username', 'password']
+
+    def __init__(self, username, password) -> None:
+        self.username = username
+        self.password = password
+
+
+class Teacher(Student):
+    __slots__ = []
+
+    def __init__(self) -> None:
+        pass
+
+
+teacher = Teacher()
+teacher.username = 'Dmytro'
+
+print(teacher.username)  # Dmytro
+
+Тогда у нас получается создать этот атрибут.
+Колекция __slots__ напрямую не наследуется, но она наследуется в колекции __slots__
+
+
+
