@@ -1,1 +1,1 @@
-Это мой репозиторий в гит 
+This is my private git repositories.
