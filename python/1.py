@@ -1,7 +1,3 @@
-def generator():
-    yield 1
-    yield 2
-    yield 3
+from array import array
 
-
-print(list(generator()))  # [1, 2, 3]
+my_array = array()

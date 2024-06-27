@@ -2246,3 +2246,268 @@ print(teacher.username)  # Dmytro
 
 
 
+Создание собственных типов ошибок
+
+Все ошибки в пайтоне наследуются от Exception.
+Для создания ошибки нужно сделать класс который наследует Exception:
+
+class MyPersonalError(Exception):
+    pass
+
+
+raise MyPersonalError
+# Traceback (most recent call last):
+#   File "/Users/dima/Documents/main-folder/python/1.py", line 5, in <module>
+#     raise MyPersonalError
+# MyPersonalError
+
+Из класса Exception наследуется базовый функционал, такой как например добавление сообщений.
+Под капотом это вывод информации об объекте пользователю, за это отвечает метод __str__.
+Определим два магических метода __init__ и __str__.
+
+class MyPersonalError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
+
+raise MyPersonalError('message from my personal error')
+
+Этот функционал прописывать не обязательно ведь он наследуется от Exception.
+Также хорошо будет прописать описание за, что отвечает ошибка:
+
+class MyPersonalError(Exception):
+    """Это моя крутая ошибка, которая отвечает сама за себя"""
+
+Также теперь мы можем создавать иерархии из типов ошибок
+
+class MyPersonalError(Exception):
+    """Базовый тип ошибок"""
+
+
+class MyPersonalErrorYaGolodniy(MyPersonalError):
+    """Выводится, когда я голоден"""
+
+
+class MyPersonalErrorMneNuzhenPython(MyPersonalError):
+    """Выводится, когда мне нужен пайтон"""
+
+
+event = input(">>>")
+try:
+    if event == "I'm hungry":
+        raise MyPersonalErrorYaGolodniy
+
+    if event == "I want Python":
+        raise MyPersonalErrorMneNuzhenPython
+
+except MyPersonalError:
+    print('This is your error')
+
+В этом примере есть две ошибки которые наследуют MyPersonalError.
+И мы можем обрабатывать их одним разом.
+
+
+
+Менеджеры контекста with
+ 
+Менеджер контекста это тоже класс, который содержит два метода:
+__enter__() - срабатывает в момент создания объекта менеджера контекста.
+__exit__() - срабатывает в момент завершения работы менеджера контекста или возникновения исключения.
+
+with open('somefile.txt') as f:  # вот здесь вызывается __enter__
+    r = f.read()
+    # здесь __exit__
+
+Стандартная модель with:
+
+with <менеджер_контекста> as <переменная>:
+    список конструкций языка Python
+
+Напишем менеджер контекста, который будет копировать все элементы списка в другой, но в случае ошибки 
+он не изменит список.
+
+class SecureCopying:
+    """
+    Класс делает копирование списков безопасным, 
+    если возникнет ошибка список не будет затронут.
+    """
+
+    def __init__(self, sequence: list) -> None:
+        self.__sequence = sequence
+
+    def __enter__(self):
+        self.__test_sequence = self.__sequence.copy()
+        # __enter__ возвращает объект, c которым будем работать в дальнейшем
+        return self.__test_sequence
+
+    def __exit__(self, type, value, tb):
+        # type - тип ошибки, если ее не возникает принимает значение None
+        # value - сообщение (текст) ошибки
+        # tb - место ошибки
+        if type == None:  # если ошибки не возникает копирует тестовый список в главный список
+            self.__sequence = self.__test_sequence.copy()
+
+        return False  # если прописать True ошибка не обработается
+
+    def __str__(self):
+        return self.__sequence
+
+
+numbers = [5, 4, 3, 2, 1]
+with SecureCopying([1, 2, 3, 4, ]) as seq:
+    for i in enumerate(seq):
+        seq[i] = numbers[i]
+
+    print(seq)
+
+В этом слувчае возникнет IndexError, но список не будет отформатирован.
+
+
+
+Вложенные классы
+
+
+Вложенные классы - это классы написанные внутри других классов.
+
+class Parent:
+    work = 'miner'
+    money = 0
+    knowledge = 100
+
+    class Children:
+        age = 1
+
+В этом примере Children это вложенный класс.
+При создании объекта Parent, объект Children не будет создаваться, но у него будет доступ 
+к области видимости Children.
+К примеру вот так можно через Parent обратится к атрибутам Children
+
+print(Parent.Children.age)  # 1
+
+И тоже самое с объектами Parent.
+
+print(batya.Children.age)  # 1
+
+При этом мы не можем создать объект класса Children, ведь класс находится не в глоабльной области 
+видимости.
+Но мы можем сделать это через Parent
+
+boy = Parent.Children()
+print(boy.__class__)  # <class '__main__.Parent.Children'>
+
+И класс при этом также показывает как вложенный в Parent.
+Из этого можно сделать вывод, что можно обратится к классу, в который класс вложен, в инициализаторе.
+
+class Parent:
+    work = 'miner'
+    money = 0
+    knowledge = 100
+
+    class Children:
+        age = 1
+
+        def __init__(self):
+            print(Parent)  # <class '__main__.Parent'>
+
+Но так делать не рекомендуется, как и впринципе производить действия c классом, в который вложен другой класс, 
+через другой класс.
+
+
+
+Метаклассы
+
+Класс - это объект, на подобии которого можно создавать другие объекты.
+Метаклассы - это объекты, на подобии которых создаются классы.
+В пайтоне есть один встроенный метакласс - type.
+И от него создаются все типы данных, ведь типы данных это тоже классы.
+
+print(isinstance(int, type))  # True
+print(type(str))  # <class 'type'>
+# Это доказывает, что типы данных создаются от type
+
+class Student:
+    pass
+
+
+print(type(Student))  # <class 'type'>
+# И классы также
+
+С помощью функции type можно не только выводить класс объекта, но можно и создавать классы
+
+type(ИмяКласса, (ОтКакихКлассовНаследуется), {АтрибутыИМетоды})
+
+Пример
+
+Student = type('Student', (), {'name': 'Dmytro', 'surname': 'Oleynik'})
+student = Student()
+print(dir(student))
+# ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__',
+# '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__',
+#  '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__',
+# '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'name', 'surname']
+
+Этот класс такой же как и этот
+
+class Student:
+    name = 'Dmytro'
+    surname = 'Oleynik'
+
+Чтоб добавить метод в класс, написанный с помощью type(), нужно написать функцию и передать ее в
+качестве значения атрибута
+
+def init(self, password):
+    self.password = password
+
+
+Student = type('Student', (), {
+    'name': 'Dmytro',
+    'surname': 'Oleynik',
+    '__init__': init
+})
+
+student = Student('12345678')
+print(student.__dict__)  # {'password': '12345678'}
+
+
+Создание своих метаклассов
+
+Метакласс можно представить как функцию, которая принимает определенные аргументы и на их основе создает
+класс.
+
+def my_metaclass(name, inheritance, attributes):
+    attributes.update({'metaclass': "My metaclass"})
+    return type(name, inheritance, attributes)
+
+
+class Student(metaclass=my_metaclass):
+    def __init__(self):
+        self.password = '1234'
+
+
+student = Student()
+print(student.metaclass)  # My metaclass
+
+Это пример создания метакласса, с помощью функции, но так делать не рекомендуется лучше сделать 
+метакласс в виде отдельного класса.
+
+# def my_metaclass(name, inheritance, attributes):
+#     attributes.update({'metaclass': "My metaclass"})
+#     return type(name, inheritance, attributes)
+class Meta(type):
+    def __init__(cls, name, inheritance, attributes):
+        super().__init__(name, inheritance, attributes)
+        cls.metaclass = "This is my metaclass"
+
+
+class Student(metaclass=Meta):
+    def __init__(self):
+        self.password = '1234'
+
+
+student = Student()
+print(student.metaclass)  # This is my metaclass
+
+Это пример создания метакласса в виде отдельного класса.
