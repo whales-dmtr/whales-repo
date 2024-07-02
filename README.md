@@ -1,1 +1,1 @@
-This is my private git repositories.
+This is my private git repository.
