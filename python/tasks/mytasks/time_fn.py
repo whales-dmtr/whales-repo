@@ -9,6 +9,7 @@ def time_fn(fun):
         end = time.time()
         fun_time = end - start
 
-        print(f"Time of working function {fun_time}")
+        # :.10f выводит число в десятичном виде
+        print(f"Time of working function {fun_time:.10f}")
         return do_fun
     return wrapper

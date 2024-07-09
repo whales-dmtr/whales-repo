@@ -1,4 +1,4 @@
-# easy
+# Easy
 class Solution:
     def twoSum(self, nums: list[int], target: int) -> list[int]:
         for key, main in enumerate(nums):
