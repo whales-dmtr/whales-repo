@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<table style="border: 1px solid black;">
+    <h3>Your costs here</h3>
+    {% for cost in data %}
+    <tr>
+        <td style="border: 1px solid black; padding: 4px;">{{ cost.text }}</td>
+        <td style="border: 1px solid black; padding: 4px;">{{ cost.category }}</td>
+        <td style="border: 1px solid black; padding: 4px;"><a href="{% url 'category' cost.category %}">Go to
+                category {{ cost.category }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

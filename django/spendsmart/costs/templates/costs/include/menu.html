@@ -1,0 +1,7 @@
+<div class="menu">
+    {% for r in ref %}
+    <div class="ref-block">
+        <a href="{% url r.url_name %}" class="ref"> {{ r.title }} </a>
+    </div>
+    {% endfor %}
+</div>

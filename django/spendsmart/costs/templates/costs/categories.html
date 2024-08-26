@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for category in data %}
+<ul>
+    {% if category.important %}
+    <h2 style="color: red">{{ category.title }}</h2>
+    {% else %}
+    <h2>{{ category.title }}</h2>
+    {% endif %}
+    <p>{{ category.desc }} </p>
+</ul>
+{% endfor %}
+
+{% endblock %}
