@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if was_found %}
+<p>Here is {{ category_name }} categories</p>
+<ul style="border: 1px solid black; width: 200px">
+    <h2>{{ info.title }}</h2>
+    <p>{{ info.desc }}</p>
+</ul>
+{% else%}
+<p>Category not found :(</p>
+{% endif %}
+
+{% include 'costs/include/allcat_ref.html' %}
+
+{% endblock %}

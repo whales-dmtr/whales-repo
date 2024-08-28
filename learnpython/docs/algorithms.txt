@@ -1,0 +1,401 @@
+Стэки, очереди, кучи
+
+Стэк (Last-In-First-Out) - это последовательность в которую элементы вставляем в конец и удаляем также из конца.
+
+Пример использования 
+-------------------------------------------------------
+# Эта программа проверяет закрыта ли каждая скобка в строке
+# Здесь используются стэки
+string = input('Enter string with brackets to check:')
+# string = "( { [ } )"
+
+
+def lifo_stack(string: str):
+    status = False
+    stack = []
+    for i in string:
+
+        if i in "({[":
+            stack.append(i)
+            continue
+
+        elif i in ")}]":
+            if len(stack) == 0:
+                return False
+
+            without_end = stack.copy().pop()
+
+            if without_end == '(' and i == ')':
+                stack.pop()
+                continue
+
+            if without_end == '[' and i == ']':
+                stack.pop()
+                continue
+
+            if without_end == '{' and i == '}':
+                stack.pop()
+                continue
+
+            status = False
+
+    if not stack:
+        status = True
+
+    return status
+
+
+print(lifo_stack(string))
+-------------------------------------------------------
+
+Очередь (First-In-First-Out) - это структура данных похожая на стэк, только в ней элемент 
+элементы удаляются в начале, а вставляются все также в конец.
+
+
+Куча (heap) - это древовидная бинарная структура данных, в который каждый родительский элемент меньше дочерних
+в случае MinHeap, в случае MaxHeap все тоже самое только родительские элементы больше дочерних.
+Реализация есть в тасках
+
+
+
+
+Массивы
+
+Массивы - это структура данных похожая на список, но более оптимизированней.
+Основные отличия от списка - все элементы одного типа.
+Для создания массива нужно сначала импортировать array.
+
+import array
+
+Затем создаем массив
+
+myarray = array('i', [1, 2, 3, 4])
+
+Создаем его с помощью функции array(), первым параметром указываем тип элементов данного массива
+(таблица ниже), и затем нужно указать итерируемый объект.
+
+TYPECODE	C TYPE	            PYTHON TYPE	        SIZE    NOTE
+'b'	        signed char	        int	                1
+'B'	        unsigned char	    int	                1
+'u'	        wchar_t	            Unicode character	2
+'h'	        signed short	    int	                2
+'H'        	unsigned short	    int	                2       только положительные целые числа
+'i'     	signed int	        int	                2       положительные и отрицательные целые числа
+'I'	        unsigned int	    int	                2
+'l'	        signed long	        int	                4
+'L'	        unsigned long	    int	                4
+'q'	        signed long long	int	                8
+'Q'	        unsigned long long	int	                8
+'f'	        float	            float	            4
+'d'	        double	            float	            8       числа с плавающей запятой
+
+Массив - упорядоченная последовательность, поэтому по нему можно индексироваться также как и по списку.
+
+from array import array
+
+myarray = array('i', [1, 2, 3, 4])
+print(myarray[0])  # 1
+print(myarray[-2])  # 3
+print(myarray[1:3])  # array('i', [2, 3])
+print(myarray[0:4:2])  # array('i', [1, 3])
+print(myarray[::-1])  # array('i', [4, 3, 2, 1])
+
+# выводит тип данных, который хранит массив 
+print(myarray.typecode)  # i
+
+# объединение массивов
+newarray = array('i', [5, 6, 7, 8])
+dounlearray = myarray + newarray
+print(dounlearray)  # array('i', [1, 2, 3, 4, 5, 6, 7, 8])
+
+# добавление элементов в массив
+myarray.append(5)
+print(myarray)
+
+# сколько байт может хранить один элемент массива
+myarray = array('i', [1, 2, 3, 4])
+print(myarray.itemsize)
+
+# умножение массивов
+myarray = array('i', [1, 2, 3, 4])
+print(myarray * 2)  # array('i', [1, 2, 3, 4, 1, 2, 3, 4])
+
+# колво конкретного элемента в массиве
+myarray = array('i', [1, 2, 3, 4])
+print(myarray.count(1))  # 1
+
+# массив в список
+myarray = array('i', [1, 2, 3, 4])
+print(myarray.tolist())  # [1, 2, 3, 4]
+
+# также можно конвертировать и с помощью стандартных функций
+myarray = array('i', [1, 2, 3, 4])
+print(list(myarray))  # [1, 2, 3, 4]
+print(tuple(myarray))  # (1, 2, 3, 4)
+print(set(myarray))  # {1, 2, 3, 4}
+
+# вывести индекс данного значения 
+print(myarray.index(4))  # 3
+
+# добавить элемент по индексу
+myarray = array('i', [1, 2, 3, 4])
+myarray.insert(1, 666)
+print(myarray)  # array('i', [1, 222, 2, 3, 4])
+
+# удалить элемент и вернуть его значение
+myarray = array('i', [1, 2, 3, 4])
+print(myarray.pop())  # 4
+print(myarray)  # array('i', [1, 2, 3])
+
+# удаление конкретных элементов массива 
+myarray = array('i', [1, 2, 3, 4])
+myarray.remove(2)
+print(myarray)  # array('i', [1, 3, 4])
+
+
+
+Связанные списки 
+
+Связанные списки - это упорядоченная колекция элементов (как список).
+В обычном списке все данные хранятся одним блоком, в связном списке каждый элемент помимо данных
+содержит ссылку на следующий элемент.
+Каждый элемент связного списка называется узлом.
+Каждый узел содержит data (данные) и next (ссылку на следующий объект).
+Первый узел называется head, последний в next хранит None.
+
+В пайтоне есть встроенная библиотека для создания связанных списков.
+
+import collections as coll
+
+Создаем сам линкед лист, с помощью метода .deque()
+
+llist = coll.deque()
+
+В deque нужно передать итерируемый объект.
+
+import collections as coll
+
+llist = coll.deque([1, 2, 3, 4, 5])
+llist = coll.deque({'First': 1, 'Second': 2})
+llist = coll.deque((13, 14, 15, 16))
+llist = coll.deque("Hello, World!")
+
+Добавить элемент в линкедлист можно с помощью тех же append и pop
+
+llist.append(6)
+llist.pop()
+llist.appendleft(0)
+llist.popleft()
+
+И с помощью этих методов можно реализовать стэки и очереди.
+
+
+Реализация своего линкедлиста
+
+class Node:
+    """Класс для узлов в связанном списке"""
+
+    def __init__(self, data):
+        self.data = data  # элемент
+        self.next = None  # следующий элемент
+
+    def __str__(self):
+        return self.data
+
+
+class LinkedList:
+    """
+    Класс для самого связанного списка.
+    Здесь важно понимать, что этот класс хранит только первый элемент (head),
+    и затем по нему можно перейти к любому элементу.
+    """
+
+    def __init__(self):
+        self.head = None  # Изначально первый элемент не задан
+        # его нужно установить ручками
+
+    def __str__(self):
+        """Алгоритм для генерации связного списка по первому элементу"""
+        node = self.head  # ссылка на первый объект
+        nodes = []  # элементы связанного списка
+        while node is not None:  # проверяем, если node - None, это последний узел
+            nodes.append(str(node.data))  # добавляем элемент в nodes
+            node = node.next  # переходим к следующему элементу
+        nodes.append('None')  # добавляем в конец None, ведь на нем цыкл закончился
+        return " -> ".join(nodes)  # красииииво выводим список
+
+Далее можно расширять этот класс как хочешь.
+Добавляем возможность итерации по связанному списку.
+
+def __iter__(self):
+    node = self.head  # фиксируем первый элемент
+    while node != None:  # если первый узел есть
+        yield node.data  # проходимся по всем
+        node = node.next  # переход на следующий узел
+
+При итерации вызывется метож __iter__ и он будет каждый раз возвращать data из узла 
+
+Добавим append и appendleft
+
+    def appendleft(self, new_node):
+        new_node.next = self.head  # в добавляемый узел добавляем next в виде текущего head
+        self.head = new_node  # меняем первый элемент (head)
+
+    def append(self, new_node):
+        if self.head == None:  # если линкедлист пустой просто добавим head
+            self.head = new_node
+        else:
+            current_node = self.head  # фиксируем начало линкедлиста для дальнейшего прохода по нему
+            while current_node.next != None:  # проходимся до ласт элемента
+                current_node = current_node.next 
+            current_node.next = new_node  # в ластовый узел добавляем новый узел
+
+Также можно реализовать и pop, popleft
+
+    def pop(self):  
+        for key, node in enumerate(self):  # проходимся до ласт элемента
+            pass
+        deleted_node = self.get_nodes_list()[key]  # фиксируем узел который будет отрезан от линкедлиста
+        self.get_nodes_list()[key-1].next = None  # отрезаем последний узел
+        return deleted_node  # возвращаем отрезанный узел
+
+    def popleft(self):  
+        deleted_node = self.head  # фиксируем первый узел
+        self.head = self.head.next # делаем head-ом след узел после первого (head)
+        return deleted_node  # возвращаем удаленный узел
+
+Расширим возможности связного списка список, добавив previous ссылку на предедущий элемент
+
+class UpgratedNode(Node):
+    def __init__(self, data):
+        super().__init__(data)
+        self.previous = None
+
+
+class UpgratedLinkedList(LinkedList):
+    def appendleft(self, new_node):
+        self.head.previous = new_node
+        new_node.next = self.head
+        self.head = new_node
+
+    def __str__(self):
+        node = self.head
+        nodes = ['None']
+        while node.next != None:
+            nodes.append(str(node.data))
+            node = node.next
+        else:
+            while node.previous != None:
+                nodes.append(str(node.data))
+                node = node.previous
+            nodes.append('None')
+        return " -> ".join(nodes)
+
+
+next_nodes = [
+    UpgratedNode(25),
+    UpgratedNode(26),
+    UpgratedNode(27),
+    UpgratedNode(28)
+]
+
+previous_nodes = [
+    UpgratedNode(14),
+    UpgratedNode(13),
+    UpgratedNode(12),
+    UpgratedNode(11)
+]
+
+ullist = UpgratedLinkedList()
+
+for i in next_nodes:
+    ullist.append(i)
+
+for i in previous_nodes:
+    ullist.appendleft(i)
+
+print(ullist)
+# None -> 11 -> 12 -> 13 -> 14 -> 25 -> 26 -> 27 -> None
+
+Если вкраце, здесь добавил previous в UpgratedNode и сделал возможность читать список и по next и по previous,
+ну и поправил appendleft для удобства.
+Функционал можно апгрейдить до бесконечности.
+
+
+Хэш-таблица
+
+Хэш-таблица - это дефолтная структура данных.
+Которая хранит в себе пары ключ-значение.
+Словарь (dict) - это встроенная реализация хэш-таблицы.
+Ключ обязательно должен быть хэшированным типом данных (неизменяемым).
+Ключи уникальные, не может быть два одинковых ключа, но может быть два одинаковых значения.
+Главный прикол в том, что найти элемент в хэш-таблице можно всегда за O(1) и это делается по формуле
+
+первый_элемент + (колво_байтов_одного_элемента * индекс)
+
+Эта операция называется хэш-функция и она используется в массивах, списках и кортежах.
+Хотя со списками ситуация немного меняется так как он может хранить элементы разных типов.
+В списках пайтон не хранит все элементы вместе, он хранит массив указателей на элементы в памяти.
+
+    List                0xff: "hello"
+
+0xff, 0xb5, 0x7f        0xb5: 42
+
+                        0x7f: True
+
+Указатели - это просто целые числа, которые всегда занимают одинаковое колво места.
+Адреса в памяти принято обозначать шестнадатеричной системой счисления, Python добавляет к таким числам
+префикс 0x.
+Но можно ли тоже самое сделать со словарями? Да
+c помощью хеширования.
+Хеширование преобразовует любой неизменяемый объект в целое число.
+В пайтоне для этого можно использовать функцию hash().
+
+
+Бинарное дерево поиска (Binary Search Tree)
+
+Это древовидная структура в которой у каждого элемента по два дочерних, левый меньше самого элемента,
+а правый больше самого элемента.
+
+      15        
+    /    \
+  10      17
+ /  \    /  \
+4   11 14    21
+
+Есть несколько важных понятий
+
+15 - это root элемент (самый первый)
+Также есть left и right элементы (левый и правый), например для 17 это 14 (left) и 21 (right)
+height - это высота дерева (количество слоев), например в нашем случае это высота 3.
+По высоте можно определить колво элементов, если дерево сбалансированно.
+колво элементов = 2^height
+Дерево сбалансированно, если высота дочерних элементов рута (root) отличается не больше чем на 1.
+Сбалансированное дерево:
+
+      21
+    /    \
+  12      35
+ /  \    /  \
+7   15  4    48
+               \
+                52
+
+Несбалансированное дерево
+
+   15
+  /  \
+11    21
+     /
+    3
+     \
+      55
+
+Здесь различие между высотой правого и левого элемента 2, и соответственно оно не сбалансированно.
+
+search O(log(N))
+insert O(log(N)) 
+remove O(log(N)) 
+
+Все операции с бинарным деревом поиска логорифмические, но при условии, что дерево сбалансированное.
+
