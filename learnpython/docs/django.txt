@@ -736,3 +736,52 @@ def show_menu():
     {% endfor %}
 </div>
 
+
+
+Модель 
+
+Модель - отвечает работу с базой данных.
+ORM (Object-Relational Mapping) - механизм, для взаимодействия с бд, с помощью классов пайтона.
+
+За бд в джанго отвечает коллекция DATABASES в файле settings
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # субд
+        'NAME': BASE_DIR / 'db.sqlite3',  # путь к файлу с базой
+    }
+}
+
+Модель каждого приложения создается в файле models.
+Базы данных создаются следующим образом:
+
+from django.db import models
+
+# имя должно быть такое же как и у бд
+class Costs(models.Model):  # класс обязательно должен наследовать Model
+    # поле id прописывать не надо, оно создастся автоматически
+    # сначала идет имя столбца, потом тип
+    title = models.CharField(max_length=40)    
+    price = models.FloatField(max_length=11)
+    time_create = models.DateTimeField(auto_now_add=True)
+    deadline = models.DateTimeField()
+    status = models.ChatField(max_length=6)
+ 
+
+Затем, после создания модели, чтобы база данных создалась нужно создать и запустить файлы миграции.
+У каждого приложения есть файл с миграциями и при их создании они будут там появляться. 
+Эта система похожа на систему контроля версий потому, что миграции хранятся последовательно и можно 
+в любой момент откатиться до другой версии.
+Для создания миграций нужна команда:
+
+python3 manage.py makemigrations
+
+Чтоб посмотреть какой запрос к бд будет делать миграция пишем:
+
+python3 manage.py sqlmigrate <приложение> <только номер миграции, которую нужно выполнить>
+
+Выполнить миграцию
+
+python3 manage.py migrate
+
+>>>>>>> 18f0a2e (Add conection to PostgreSQL DB)
