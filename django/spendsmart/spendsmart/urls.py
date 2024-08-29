@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('wallet/', include('wallet.urls')),
     path('costs/', include('costs.urls')),
+    path('buys/', include('buys.urls')),
 ]
 
 handler404 = page_not_found
