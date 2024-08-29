@@ -784,4 +784,4 @@ python3 manage.py sqlmigrate <приложение> <только номер м�
 
 python3 manage.py migrate
 
->>>>>>> 18f0a2e (Add conection to PostgreSQL DB)
+
