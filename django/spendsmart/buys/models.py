@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class Buys(models.Model):
+    title = models.CharField(max_length=40)
+    owner = models.IntegerField()
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+
+
