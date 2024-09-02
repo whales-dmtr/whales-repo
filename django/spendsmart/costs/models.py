@@ -11,9 +11,13 @@ class Costs(models.Model):
     ]
 
     title = models.CharField(max_length=40)
-    owner = models.IntegerField(unique=True)  # после создания таблицы юзеров сделать внешним ключом
+    owner = models.IntegerField()  # после создания таблицы юзеров сделать внешним ключом
     recipient = models.IntegerField()  
     frequency = models.CharField(max_length=3, choices=FREQ, default='EM')
     price = models.DecimalField(max_digits=9, decimal_places=2)
 
+    # def __str__(self):
+    #     return str((self.title, self.owner, self.recipient, self.frequency, self.price))
 
+
+# print(Costs.objects.all()[0].title)

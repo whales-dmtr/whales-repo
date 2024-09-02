@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.urls import reverse
+from . import models
 
 data_categories = {
         'data': [
@@ -11,17 +12,8 @@ data_categories = {
         ]
     }
 
-data_costs = {
-        'data': [
-            {'text': "Buy bread, milk, cucumbers, greek yogurt", 'category': 'Food'},
-            {'text': "Pay for utilities", 'category': 'Utilities'},
-            {'text': "Buy croissant", 'category': 'Other'},
-        ]
-    } 
-
-
 def show_costs(request): 
-    return render(request, 'costs/costs.html', context=data_costs)
+    return render(request, 'costs/costs.html')
 
 
 def show_costs_category(request, category_name):

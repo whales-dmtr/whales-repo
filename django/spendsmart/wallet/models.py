@@ -11,6 +11,4 @@ class Users(models.Model):
     
     def __str__(self):
         return str((self.pk, self.name, self.password, self.email))
-
-
-print(Users.objects.get(pk__in=[1, 2, 5]))
+ 

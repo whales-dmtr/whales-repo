@@ -838,10 +838,10 @@ print(Users.objects.filter(name='whale'))
 
 Чтобы сравнивать числа, нужно использовать суффиксы
 
-<имя атрибута>__gte     >=
-<имя атрибута>__gt      >
-<имя атрибута>__lte     <=
-<имя атрибута>__lt      <
+<имя атрибута>__gte     >=  больше или равно
+<имя атрибута>__gt      >   больше
+<имя атрибута>__lte     <=  меньше или равно
+<имя атрибута>__lt      <   меньше
 
 Пример:
 
@@ -886,4 +886,51 @@ print(Users.objects.get(pk__in=[1, 3, 5]))
 # (1, 'whale', 'whale2803', 'dmytrooliinyk2803@gmail.com')
 
 Если в результате будет больше чем одна запись или меньше чем одна запись будет ошибка.
+
+
+Для сортировки по какому-то полю (в sql это ORDER BY) пишем
+
+print(Users.objects.order_by('-pk'))
+# - перед полем означает сортировку по убыванию 
+# <QuerySet [<Users: (2, 'dima', 'brawlstars228', 'dimabrawlik@gmail.com')>, 
+# <Users: (1, 'whale', 'whale2803', 'dmytrooliinyk2803@gmail.com')>]>
+
+Также можно сделать так, чтобы таблица сама по себе была отсортирована должным образом.
+Для этого создаем вложенный в модель класс Meta:
+
+class Meta:
+    ordering = ['-id']
+
+Также с помощью этого класса можно создавать индексы:
+
+class Meta:
+    ordering = ['-id']
+    indexes = [
+        models.Index(fields=['-id'])
+    ]
+
+Чтоб изменять поля в таблице нужно
+
+changed_user = Users.objects.get(id=2)  # достать запись, которую будем изменять
+
+changed_user.name = 'Dmytro'  # меняем, как и у обычного объекта, поле
+
+changed_user.save()  # не забываем сохранять
+
+Если же нужно изменить все поля для какого-то столбца используем 
+
+Users.objects.update(email=None)
+
+Но, важно понимать, что метод update можно применять только для объектов QuerySet,
+то есть такая запись
+
+Users.objects.all()[:4].update(email=None)
+
+Создаст ошибку, вместо нее нужно использовать 
+
+Users.objects.filter(id__lte=4).update(email=None)
+
+Для удаления записей нужно 
+
+Users.objects.filter(id__lte=1).delete()
 
