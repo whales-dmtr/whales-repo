@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    height: 100vh;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    font-size: 18px;
+    text-align: left;
+    position: relative;
+    left: 4.5%;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    padding: 12px 15px;
+    font-size: 20px;
+}
+
+th {
+    background-color: darkslategrey;
+    color: #ffffff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #d1e7fd;
+}
+
+.title {
+    width: 200px;
+}
+
+.price {
+    width: 100px;
+}

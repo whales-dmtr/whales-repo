@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block links %}
+
+<link type="text/css" href="{% static 'buys/css/buys.css' %}" rel="stylesheet">
+
+{% endblock %}
 
 {% block content %}
 
-<h1>Your buys here.</h1>
+<table class="costs_table">
+    <tr>
+        <th class="title">Title</th>
+        <th class="price">Price</th>
+    </tr>
+
+    {% for buy in buys %}
+
+    <tr>
+        <td class="title">{{ buy.title }}</td>
+        <td class="price">{{ buy.price }}</td>
+    </tr>
+
+    {% endfor %}
+</table>
 
 {% endblock %}

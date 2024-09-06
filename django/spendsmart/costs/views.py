@@ -12,14 +12,15 @@ data_categories = {
         ]
     }
 
+
 def show_costs(request): 
-    return render(request, 'costs/costs.html')
+    costs_db = models.Costs.objects.all()
+    return render(request, 'costs/costs.html', context={'costs': costs_db})
 
 
 def show_costs_category(request, category_name):
     if category_name == 'redirect':
         url = reverse('category', args=('important', ))
-        # print(url)
         return HttpResponseRedirect(url)
 
     category_info = {}
@@ -30,6 +31,7 @@ def show_costs_category(request, category_name):
                 'was_found': True,
             }   
     return render(request, 'costs/category.html', context=category_info)
+
 
 def show_categories(request):
     return render(request, 'costs/categories.html', context=data_categories)
