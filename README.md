@@ -1,1 +1,1 @@
-This is my private git repository.
+This is my training github repository.

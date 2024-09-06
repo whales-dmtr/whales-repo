@@ -1,9 +1,10 @@
 from django.db import models
+from wallet.models import Users
+
 
 class Costs(models.Model):
     FREQ = [
-        # (range(1, 365), "custom number of days"),
-        ('ND', "custom number of days"),
+        ('WR', "reminder"),
         ('ED', "every day"),
         ('EW', "every week"),
         ('EM', "every month"),
@@ -11,13 +12,8 @@ class Costs(models.Model):
     ]
 
     title = models.CharField(max_length=40)
-    owner = models.IntegerField()  # после создания таблицы юзеров сделать внешним ключом
-    recipient = models.IntegerField()  
+    owner = models.ForeignKey(to=Users, on_delete=models.CASCADE, related_name='owners_costs') 
+    recipient = models.ForeignKey(to=Users, on_delete=models.CASCADE, related_name='recipient_costs') 
     frequency = models.CharField(max_length=3, choices=FREQ, default='EM')
     price = models.DecimalField(max_digits=9, decimal_places=2)
 
-    # def __str__(self):
-    #     return str((self.title, self.owner, self.recipient, self.frequency, self.price))
-
-
-# print(Costs.objects.all()[0].title)

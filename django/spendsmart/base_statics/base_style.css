@@ -1,7 +1,8 @@
 body {
-    background-color: whitesmoke;
+    background-color: darkcyan;
     display: flex;
     justify-content: center;
+    font-family: Arial, sans-serif;
 }
 
 .content {

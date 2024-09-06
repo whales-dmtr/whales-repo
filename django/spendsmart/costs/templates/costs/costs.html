@@ -1,15 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block content%}
-<table style="border: 1px solid black;">
-    <h3>Your costs here</h3>
-    {% for cost in data %}
+{% block links %}
+
+<link type="text/css" href="{% static 'costs/css/costs.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+<table class="costs_table">
     <tr>
-        <td style="border: 1px solid black; padding: 4px;">{{ cost.text }}</td>
-        <td style="border: 1px solid black; padding: 4px;">{{ cost.category }}</td>
-        <td style="border: 1px solid black; padding: 4px;"><a href="{% url 'category' cost.category %}">Go to
-                category {{ cost.category }}</a></td>
+        <th>Title</th>
+        <th>Frequency</th>
+        <th>Recipient</th>
+        <th>Price</th>
     </tr>
+
+    {% for cost in costs %}
+
+    <tr>
+        <td>{{ cost.title }}</td>
+        <td>{{ cost.frequency }}</td>
+        <td>{{ cost.recipient }}</td>
+        <td>{{ cost.price }}</td>
+    </tr>
+
     {% endfor %}
 </table>
+
 {% endblock %}

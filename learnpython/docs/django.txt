@@ -934,3 +934,109 @@ Users.objects.filter(id__lte=4).update(email=None)
 
 Users.objects.filter(id__lte=1).delete()
 
+
+Пользовательские менеджеры моделей
+
+Помимо стандартного менеджера моделей (objects) можно создавать свои менеджеры
+
+class UnblockUsersManager(models.Manager):  # менеджер должен наследовать базовый менеджер
+    def get_queryset(self) -> models.QuerySet:  # отвечает за любой вывод данных из таблицы
+        return super().get_queryset().filter(is_blocked=False)
+
+Теперь добавляем наш менеджер в модель
+
+unblock_users = UnblockUsersManager()
+
+И также теперь нужно явно добавить базовый менеджер, ведь он удалиться как только мы добавим пользовательский
+
+objects = models.Manager()
+
+
+choices 
+
+Мы можем добавить возможные значения определенного поля
+
+FREQ = [
+    ('WR', "without reminder"),  # первое значение то, что будет в бд
+    ('ED', "every day"),  # второе значение то, что будет в форме (там будет ограниченный выбор)
+    ('EW', "every week"),
+    ('EM', "every month"),
+    ('EY', "every year"),
+]
+
+После создания списка возможных значений добавляем их к столбцу
+
+frequency = models.CharField(max_length=3, choices=FREQ, default='EM')
+
+Также можно тоже самое сделать с помощью классов, создаем класс вложенный в модель
+
+class Frequency(models.TextChoices):  # для чисел IntegerChoices
+    wr = 'WR', "without reminder"
+    ed = 'ED', "every day"
+    ...
+
+И также добавляем
+
+frequency = models.CharField(max_length=3, choices=Frequency.choices, default=Frequency.wr)
+
+
+Внешние ключи (foreign key)
+
+Есть три вида связей 
+
+many to one - одной записи в таблице может соответствовать много записей из другой
+many to many - у каждой записи из двух таблиц может быть много связей и тоже самое у другой таблицы.
+Реализуется с помощью создания промежуточной таблицы.
+one to one - одна запись соответствует одной записи в таблице.
+
+Создание внешнего ключа 
+
+owner = models.ForeignKey(to=Users, on_delete=models.CASCADE) 
+
+# у ForeignKey есть два обязательных аргумента
+# to это нужно для указания таблицы
+# on_delete что случится если удалить поле на которое ссылается
+
+Варианты on_delete
+
+CASCADE - при удалении записи, на которую ссылаются, удаляются записи.
+PROTECT - пока не будет удалена запись, на которую ссылаются, удалить запись в внешним ключом будем невозможно
+SET_NULL - после удаления принимает значения SET_NULL
+SET_DEFAULT - после удаления принимает дефолтное значение
+DO_NOTHING - ничего не произойдет -_-
+
+К полю автоматически добавится суффикс _id.
+Теперь если попытаться получить значение owner то будет
+
+Users object (2)
+
+А если чекнуть owner_id
+
+2
+
+Также можно получить информацию с другой стороны, не юзера, который владеет платежами, а все платежи, которыми владеет юзер.
+То есть не со стороны many, а со стороны one. В нашем случае получить список платежей пользователя.
+Такое можно реализовать, так как при создании внешнего ключа со стороны one 
+создается атрибут <many_model>_set. 
+В нашем случае это будет costs_set.
+И он будет выглядеть вот так
+
+<QuerySet [<Costs: Costs object (1)>, <Costs: Costs object (2)>]>
+
+Также можно (а в случае если два внешних ключа в одной таблице, то даже нужно) сделать свое имя этой коллекции.
+
+owner = models.ForeignKey(to=Users, on_delete=models.CASCADE, related_name='owners_costs') 
+
+Также можно через внешний ключ сделать фильтрацию
+
+print(Costs.objects.filter(owner_id=1))
+# <QuerySet [<Costs: Costs object (1)>, <Costs: Costs object (2)>]>
+
+# Можно получать доступ к полям другой таблицы
+print(models.Costs.objects.filter(owner__name='Whale'))
+# <QuerySet [<Costs: Costs object (1)>, <Costs: Costs object (2)>]>
+
+Чтобы вывести поля без повторов
+
+models.Costs.objects.filter(owner__name='Whale').distinct()
+
